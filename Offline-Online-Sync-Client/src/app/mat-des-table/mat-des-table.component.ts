@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild, ChangeDetectorRef, } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-// import { LocalService } from 'src/shared/index-db/local.service';
+import { OfflineService } from '../offline.service';
 import { MatDesTableService } from './mat-des-table.service';
 
 @Component({
@@ -19,28 +19,28 @@ export class MatDesTableComponent implements OnInit {
 
   constructor(
     private _matDesTableService: MatDesTableService,
-    // private _local: LocalService,
+    private readonly offlineService: OfflineService,
     private _cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
-    // var isOnline = this._local.isOnline();
-    //console.log('isOnline :: ', isOnline);
+     var isOnline = this.offlineService.isOnline;
+     console.log('isOnline :: ', isOnline);
 
-    // if (isOnline) {
-    //   let data = {};
-    //   this._matDesTableService.getDetails(data).then(
-    //     (res: any) => {
-    //       this.fillTable(res);
-    //     },
-    //     (err: Object) => {
-    //       console.log('err : ', err);
-    //     })
-    //     .catch((err: Object) => {
-    //     });
-    // } else {
-     // this.getAllCustomerData();
-    //}
+    if (isOnline) {
+      let data = {};
+      this._matDesTableService.getDetails(data).then(
+        (res: any) => {
+          this.fillTable(res);
+        },
+        (err: Object) => {
+          console.log('err : ', err);
+        })
+        .catch((err: Object) => {
+        });
+    } else {
+    //  this.getAllCustomerData();
+    }
   }
 
   ngAfterViewInit() {

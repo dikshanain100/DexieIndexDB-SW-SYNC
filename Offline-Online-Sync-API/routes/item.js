@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const TodoModel = require("../models/todo");
 const Mongoose = require("mongoose");
+const https = require('https');
 
 router.get("/todos", (req, res, next) => {
   //return all items
@@ -14,7 +15,6 @@ router.get("/todos", (req, res, next) => {
       });
     }
   })
-
 });
 
 //add an item
@@ -100,5 +100,31 @@ router.delete("/bulkDelete", (req, res, next) => {
     }
   })
 })
+
+
+router.get("/entries", (req, res, next) => {
+  const options = {
+    hostname: 'api.publicapis.org',
+    port: 443,
+    path: '/entries',
+    method: 'GET',
+  };
+  
+  const result = https.request(options, res => {
+    console.log(`statusCode: ${res.statusCode}`);
+  
+    result.on('data', d => {
+      process.stdout.write(d);
+    });
+  });
+  
+  result.on('error', error => {
+    console.error(error);
+  });
+  
+  result.end();
+});
+
+
 
 module.exports = router;

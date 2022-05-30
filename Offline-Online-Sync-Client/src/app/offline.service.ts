@@ -16,11 +16,13 @@ export class OfflineService {
     window.addEventListener('offline', () => this.updateOnlineStatus());
   }
 
+  
   //return the connection state
   get connectionChanged() {
     return this.internalConnectionChanged.asObservable();
   }  
 
+  // to check network connection
   get isOnline() {
     return !!window.navigator.onLine;
   }
