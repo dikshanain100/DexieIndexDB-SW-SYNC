@@ -104,9 +104,9 @@ export class TodoService {
 
   //add todo to the indexedDB on offline mode
   private async addToIndexedDb(todo: any) {
-    this.db.todos.add(todo)
+    this.db.indexdb_todos.add(todo)
       .then(async () => {
-        const allItems: any[] = await this.db["todos"].toArray();
+        const allItems: any[] = await this.db["indexdb_todos"].toArray();
         console.log('saved in DB, DB is now', allItems);
       })
       .catch(e => {
@@ -118,9 +118,9 @@ export class TodoService {
 
   // ---------- add to delete database if offline
   private async addToDeleteDatabase(todo: any) {
-    this.donedb.todos.add(todo)
+    this.donedb.indexdb_todos.add(todo)
       .then(async () => {
-        const allItems: any[] = await this.donedb["todos"].toArray();
+        const allItems: any[] = await this.donedb["indexdb_todos"].toArray();
         console.log('saved in DB, DB is now', allItems);
       })
       .catch(e => {
@@ -135,9 +135,9 @@ export class TodoService {
 
   //create the indexedDB to store offline data(to be added)
   private createIndexedDatabase() {
-    this.db = new Dexie("TestDatabase");
+    this.db = new Dexie("AddDatabase");
     this.db.version(1).stores({
-      todos: "title,content,done"
+      indexdb_todos: "title,content,done"
     });
     this.db.open().catch(function (err) {
       console.error(err.stack || err);
@@ -148,9 +148,9 @@ export class TodoService {
 
   //create the indexedDB to store offline data(to be deleted)
   private createDoneTodosDatabase() {
-    this.donedb = new Dexie("DoneTodosDatabase");
+    this.donedb = new Dexie("DeleteDatabase");
     this.donedb.version(1).stores({
-      todos: "_id"
+      indexdb_todos: "_id"
     });
     this.donedb.open().catch(function (err) {
       console.error(err.stack || err);
@@ -193,11 +193,11 @@ export class TodoService {
   //send the todos to the backend to be added inside the mongodb
   private async sendItemsFromIndexedDb() {
     console.log("sending items");
-    const allItems: any[] = await this.db.todos.toArray();
+    const allItems: any[] = await this.db.indexdb_todos.toArray();
     //bulk update to mongodb
     this.bulkTodo(allItems).subscribe(res => {
       console.log(res);
-      this.db.todos.clear();
+      this.db.indexdb_todos.clear();
     })
   }
 
@@ -206,10 +206,10 @@ export class TodoService {
   //send the todos to the backend to be deleted in mongodb
   private async sendItemsToDelete() {
     console.log("sending items for bulk delete");
-    const allItems: any[] = await this.donedb.todos.toArray();
+    const allItems: any[] = await this.donedb.indexdb_todos.toArray();
     this.bulkDelete(allItems).subscribe(res => {
       console.log(res);
-      this.donedb.todos.clear();
+      this.donedb.indexdb_todos.clear();
     });
 
   }

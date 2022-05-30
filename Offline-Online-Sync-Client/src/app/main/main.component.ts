@@ -29,20 +29,20 @@ export class MainComponent implements OnInit, OnDestroy {
     this.todoService.addTodo(formData);
     this.todoForm.reset();
     //refetch the data from mongo
-    this.getTodos();
+    //this.getTodos();
    
   }
 
   getTodos(){
     this.todoSubscription = this.todoService.getAllTodos().subscribe(todos => {
-      this.todos = todos["data"];
+     this.todos = todos["data"];
     });
   }
 
   delete(todoId: string) {
     this.todoService.deleteTodo(todoId)
     //refetch the data from mongo
-    this.getTodos();
+   // this.getTodos();
   }
 
 
