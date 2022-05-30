@@ -41,7 +41,7 @@ mongoose.connect(
         }
     })
   });
-/*
+
   server.use((req, res, next)=>{
     //we say what we want to allow, you can whitelist IPs here or domains
     res.header("Access-Control-Allow-Origin", "*"); 
@@ -61,7 +61,6 @@ mongoose.connect(
    
     next();
 });
-*/
 
 server.use("/", item);
 
@@ -88,12 +87,12 @@ server.use((error, req, res, next)=>{
 
 
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 8080;
 
 
 //create the server
 server.listen(port, ()=>{
-    console.log("Server is running @ localhost:8000");
+    console.log("Server is running @ localhost:8080");
 });
 
 

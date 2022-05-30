@@ -31,6 +31,7 @@ export class MatDesTableComponent implements OnInit {
       let data = {};
       this._matDesTableService.getDetails(data).then(
         (res: any) => {
+          console.log('res :: ', res);
           this.fillTable(res);
         },
         (err: Object) => {

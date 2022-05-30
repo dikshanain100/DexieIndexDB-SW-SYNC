@@ -103,28 +103,50 @@ router.delete("/bulkDelete", (req, res, next) => {
 
 
 router.get("/entries", (req, res, next) => {
-  const options = {
-    hostname: 'api.publicapis.org',
-    port: 443,
-    path: '/entries',
-    method: 'GET',
-  };
-  
-  const result = https.request(options, res => {
-    console.log(`statusCode: ${res.statusCode}`);
-  
-    result.on('data', d => {
-      process.stdout.write(d);
-    });
-  });
-  
-  result.on('error', error => {
-    console.error(error);
-  });
-  
-  result.end();
-});
+  console.log('inside entries')
+  // const options = {
+  //   hostname: 'api.publicapis.org',
+  //   port: 443,
+  //   path: '/entries',
+  //   method: 'GET',
+  // };
 
+  // const request =  https.request(options, response => {
+  //   console.log(`statusCode: ${response.statusCode}`);
+  //   console.log('response : ', response);
+
+  //   request.on('data', d => {
+  //     res.status(404).send(d)
+  //   });
+
+  //   request.on('error', error => {
+  //     console.error(error);
+  //   });
+
+  //   request.end();
+  // });
+
+  https.get('https://api.publicapis.org/entries', (resp) => {
+    let data = '';
+
+    // A chunk of data has been received.
+    resp.on('data', (chunk) => {
+      data += chunk;
+    });
+
+    // The whole response has been received. Print out the result.
+    resp.on('end', () => {
+      // console.log(JSON.parse(data));
+      // res.status(200).send(JSON.parse(data))
+      res.status(200).send(data)
+    });
+
+  }).on("error", (err) => {
+    console.log("Error: " + err.message);
+  })
+
+
+});
 
 
 module.exports = router;

@@ -13,7 +13,10 @@ export class MatDesTableService {
     getDetails(data){
       return new Promise((resolve, reject) => {
         this._httpClient.call(data, URLConstants.publicEnteriesAPI, 'GET').subscribe(
-          res => resolve(res['data']),
+          res =>{
+            console.log('res :: ', res);
+            resolve(res)
+          } ,
           err => reject(err)
         );
       });
