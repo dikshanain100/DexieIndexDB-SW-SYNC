@@ -4,13 +4,15 @@ import { MainRoutingModule } from './main-routing.module';
 import { MainComponent } from './main.component';
 
 //need to import ReactiveForms module here too
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     MainRoutingModule,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    FormsModule,
+    
   ],
   declarations: [MainComponent]
 })
