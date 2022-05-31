@@ -64,6 +64,8 @@ mongoose.connect(
 
 server.use("/", item);
 
+
+// Error message is send if router doesn't exist
 server.use((req,res,next)=>{
   const error = new Error("Unable to manage the request");
   //send a status code error
@@ -72,7 +74,7 @@ server.use((req,res,next)=>{
   next(error);
 })
 
-//------------- error message
+//error message 
 server.use((error, req, res, next)=>{
   res.status(error.status || 500);
   res.json({
@@ -81,8 +83,6 @@ server.use((error, req, res, next)=>{
       }
   })
 });
-
-
 
 
 

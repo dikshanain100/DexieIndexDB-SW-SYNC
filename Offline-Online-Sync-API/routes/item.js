@@ -19,13 +19,10 @@ router.get("/todos", (req, res, next) => {
 
 //add an item
 router.post("/todos", (req, res, next) => {
-  console.log(req.body);
-
   let newtodo = new TodoModel({
     _id: new Mongoose.Types.ObjectId(),
     title: req.body["title"],
-    content: req.body["content"],
-    done: req.body["done"]
+    content: req.body["content"]
   });
 
   newtodo.save((err) => {
@@ -65,12 +62,8 @@ router.post("/bulk", (req, res, next) => {
 
 // delete an item
 router.delete("/todo/:id", (req, res, next) => {
-
   let id = req.body._id;
-  console.log(id);
-
-
-  let todoToDelete = TodoModel.deleteOne({ _id: id }, (err) => {
+  TodoModel.deleteOne({ _id: id }, (err) => {
     if (err) {
       res.status(404).json({
         message: "Item was not found",
@@ -80,7 +73,6 @@ router.delete("/todo/:id", (req, res, next) => {
         message: "Item was deleted successfully",
       });
     }
-
   })
 
 });
@@ -103,29 +95,6 @@ router.delete("/bulkDelete", (req, res, next) => {
 
 
 router.get("/entries", (req, res, next) => {
-  console.log('inside entries')
-  // const options = {
-  //   hostname: 'api.publicapis.org',
-  //   port: 443,
-  //   path: '/entries',
-  //   method: 'GET',
-  // };
-
-  // const request =  https.request(options, response => {
-  //   console.log(`statusCode: ${response.statusCode}`);
-  //   console.log('response : ', response);
-
-  //   request.on('data', d => {
-  //     res.status(404).send(d)
-  //   });
-
-  //   request.on('error', error => {
-  //     console.error(error);
-  //   });
-
-  //   request.end();
-  // });
-
   https.get('https://api.publicapis.org/entries', (resp) => {
     let data = '';
 
@@ -136,8 +105,6 @@ router.get("/entries", (req, res, next) => {
 
     // The whole response has been received. Print out the result.
     resp.on('end', () => {
-      // console.log(JSON.parse(data));
-      // res.status(200).send(JSON.parse(data))
       res.status(200).send(data)
     });
 

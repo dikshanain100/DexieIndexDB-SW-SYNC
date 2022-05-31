@@ -12,11 +12,10 @@ export class InternalHttpService {
   /**
    * if you want to pass without headers
    */
-  call(data, api, method) {
+  call(data, api, method) { 
     const headers = new HttpHeaders();
     return this.http.request(method, this.config.api_url + api, {
-      body: data,
-      headers: headers
+      body: data
     })
   }
 

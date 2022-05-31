@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild, ChangeDetectorRef, } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { OfflineService } from '../offline.service';
+import { OfflineService } from '..//shared/services/offline.service';
 import { MatDesTableService } from './mat-des-table.service';
 
 @Component({

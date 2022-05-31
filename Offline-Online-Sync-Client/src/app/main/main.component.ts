@@ -1,9 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { TodoService } from "../todo.service";
-
 import { Router, ActivatedRoute, Route } from "@angular/router";
 import { Subscription } from 'rxjs';
+import { MainService } from './main.service';
 
 
 @Component({
@@ -16,33 +15,54 @@ export class MainComponent implements OnInit, OnDestroy {
   public todos;
   public todoSubscription: Subscription;
 
-  constructor(private todoService: TodoService, private router: Router,) { }
+  constructor(private router: Router, private _mainService: MainService) { }
 
   public todoForm = new FormGroup({
     title: new FormControl('', Validators.required),
-    content: new FormControl('',  Validators.required),
-   
+    content: new FormControl('', Validators.required),
+
   });
 
-  addTodo(formData: FormData){
-   //console.log("DATA")
-    this.todoService.addTodo(formData);
-    this.todoForm.reset();
-    //refetch the data from mongo
-    //this.getTodos();
-   
+  addTodo(formData: FormData) {
+    this._mainService.addTodo(formData).then(
+      (res: any) => {
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
+          this.router.navigate(["/main"]));
+        this.todoForm.reset();
+      },
+      (err: Object) => {
+        console.log('err : ', err);
+      })
+      .catch((err: Object) => {
+      });
+
   }
 
-  getTodos(){
-    this.todoSubscription = this.todoService.getAllTodos().subscribe(todos => {
-     this.todos = todos["data"];
-    });
+  getTodos() {
+    let data = {};
+    this._mainService.getAllTodos(data).then(
+      (res: any) => {
+        this.todos = res["data"];
+
+      },
+      (err: Object) => {
+        console.log('err : ', err);
+      })
+      .catch((err: Object) => {
+      });
   }
 
   delete(todoId: string) {
-    this.todoService.deleteTodo(todoId)
-    //refetch the data from mongo
-   // this.getTodos();
+    this._mainService.deleteTodo(todoId).then(
+      (res: any) => {
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
+          this.router.navigate(["/main"]));
+      },
+      (err: Object) => {
+        console.log('err : ', err);
+      })
+      .catch((err: Object) => {
+      });
   }
 
 
@@ -50,11 +70,11 @@ export class MainComponent implements OnInit, OnDestroy {
     this.getTodos();
   }
 
-  ngOnDestroy(){
-    if(this.todoSubscription !== undefined){
+  ngOnDestroy() {
+    if (this.todoSubscription !== undefined) {
       this.todoSubscription.unsubscribe()
     }
-    
+
   }
 
 }
