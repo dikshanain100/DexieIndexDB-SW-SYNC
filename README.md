@@ -15,3 +15,7 @@ Structure of project has been modifies as per Axis project i.e using Internal Ht
 SW - For serving application offline
 Index DB - For storing data offline on browser
 Dexie DB - Library to store data in Index DB
+
+
+Dexie - version upgrade , adding data to it giving error :
+https://stackoverflow.com/questions/54728942/cant-update-index-dynamically-with-dexie-sample-code

@@ -20,7 +20,6 @@ export class MainService {
 
 
 
-
   //////////////////////////////////////////////// GENERAL CODE + ONLINE ///////////////////////////////////////////////////////////////
 
 
@@ -104,6 +103,7 @@ export class MainService {
 
   //add to delete database if offline
   private async addToDeleteDatabase(todo: any) {
+    console.log('todo : ', todo);
     this._dexieService.dbInstance.indexdb_todos_delete.add(todo)
       .then(async () => {
         const allItems: any[] = await this._dexieService.dbInstance["indexdb_todos_delete"].toArray();
@@ -114,9 +114,6 @@ export class MainService {
       });
   }
 
-
-  /////////////////////////////////////////////////////// INDEX DB ////////////////////////////////////////////////////////////////////////
-  
 
 
 
