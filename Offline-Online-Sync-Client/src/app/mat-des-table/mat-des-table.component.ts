@@ -25,7 +25,6 @@ export class MatDesTableComponent implements OnInit {
 
   ngOnInit(): void {
      var isOnline = this.offlineService.isOnline;
-     console.log('isOnline :: ', isOnline);
 
     if (isOnline) {
       let data = {};
@@ -40,7 +39,7 @@ export class MatDesTableComponent implements OnInit {
         .catch((err: Object) => {
         });
     } else {
-    //  this.getAllCustomerData();
+     // this.getAllCustomerData();
     }
   }
 

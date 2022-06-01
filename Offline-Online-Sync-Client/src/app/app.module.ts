@@ -1,14 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
-// import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-// import { HttpClientModule } from "@angular/common/http";
+import { APP_INITIALIZER } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 
 import { SharedModule } from './shared/shared.module';
+import { DexieService } from './shared/services/dexie.service';
 
 @NgModule({
   declarations: [
@@ -16,13 +15,23 @@ import { SharedModule } from './shared/shared.module';
   ],
   imports: [
     BrowserModule,
-    // FormsModule,
-    // HttpClientModule,
-   // ReactiveFormsModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     AppRoutingModule,
   ],
-  providers: [],
+  providers: [
+    // Loading DexieService on Application start
+    DexieService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (ds: DexieService) => () =>
+      {        
+         ds.load()
+        // return ds.load()
+      } ,
+      deps: [DexieService],
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent],
   exports :[
     SharedModule

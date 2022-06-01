@@ -14,7 +14,7 @@ import { ServicesModule } from './services/services.module';
 
   ],
   exports : [
-    ServicesModule
+    ServicesModule,
   ]
 })
 export class SharedModule { }
