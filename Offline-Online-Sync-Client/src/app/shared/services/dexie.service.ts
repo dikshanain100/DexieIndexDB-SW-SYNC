@@ -21,14 +21,18 @@ export class DexieService {
   }
 
 
-  get addDbInstance() {
+  get dbInstance() {
     return this.db;
   }
 
+  // get addDbInstance() {
+  //   return this.db;
+  // }
 
-  get deleteDbInstance() {
-    return this.donedb;
-  }
+
+  // get deleteDbInstance() {
+  //   return this.donedb;
+  // }
 
 
   load(){
@@ -41,22 +45,23 @@ export class DexieService {
 
   private createIndexedDatabase() {
     //create the indexedDB to store offline data(to be added)
-    this.db = new Dexie("AddDatabase");
+    this.db = new Dexie("DexieDatabase");
     this.db.version(1).stores({
-      indexdb_todos: "title,content"
+      indexdb_todos_add: "title,content",
+      indexdb_todos_delete: "_id"
     });
     this.db.open().catch(function (err) {
       console.error(err.stack || err);
     });
 
     //create the indexedDB to store offline data(to be deleted)
-    this.donedb = new Dexie("DeleteDatabase");
-    this.donedb.version(1).stores({
-      indexdb_todos: "_id"
-    });
-    this.donedb.open().catch(function (err) {
-      console.error(err.stack || err);
-    });
+    // this.donedb = new Dexie("DeleteDatabase");
+    // this.donedb.version(1).stores({
+    //   indexdb_todos: "_id"
+    // });
+    // this.donedb.open().catch(function (err) {
+    //   console.error(err.stack || err);
+    // });
 
   }
 
@@ -97,12 +102,11 @@ export class DexieService {
 
   //send the todos to the backend to be added inside the mongodb
   public async sendItemsFromIndexedDb() {
-    const allItems: any[] = await this.addDbInstance.indexdb_todos.toArray();
-
+    const allItems: any[] = await this.dbInstance.indexdb_todos_add.toArray();
     //bulk update to mongodb
     this.bulkTodo(allItems).then(
       (res: any) => {
-        this.addDbInstance.indexdb_todos.clear();
+        this.dbInstance.indexdb_todos_add.clear();
       },
       (err: Object) => {
         console.log('err : ', err);
@@ -115,12 +119,10 @@ export class DexieService {
 
   //send the todos to the backend to be deleted in mongodb
   public async sendItemsToDelete() {
-    console.log("sending items for bulk delete");
-    const allItems: any[] = await this.deleteDbInstance.indexdb_todos.toArray();
-
+    const allItems: any[] = await this.dbInstance.indexdb_todos_delete.toArray();
     this.bulkDelete(allItems).then(
       (res: any) => {
-        this.deleteDbInstance.indexdb_todos.clear();
+        this.dbInstance.indexdb_todos_delete.clear();
       },
       (err: Object) => {
         console.log('err : ', err);
@@ -133,7 +135,7 @@ export class DexieService {
 
   // Send items to backend for addition once application comes online again
   public bulkTodo(todos: any) {
-    let data = JSON.stringify(todos);
+    let data = todos;
     return new Promise((resolve, reject) => {
       this._httpClient.call(data, URLConstants.bulkAPI, 'POST').subscribe(
         res => {
@@ -148,7 +150,7 @@ export class DexieService {
 
   // Since data has been added to mongodb after application came online; same needs to be removed from indexdb
   public bulkDelete(todos: any) {
-    let data = JSON.stringify(todos);
+    let data = todos;
     return new Promise((resolve, reject) => {
       this._httpClient.call(data, URLConstants.bulkDeleteAPI, 'DELETE').subscribe(
         res => {

@@ -42,8 +42,6 @@ router.post("/todos", (req, res, next) => {
 
 
 router.post("/bulk", (req, res, next) => {
-  console.log(req.body);
-
   TodoModel.insertMany(req.body, (err, docs) => {
     if (err) {
       res.status(400).json({
@@ -79,7 +77,6 @@ router.delete("/todo/:id", (req, res, next) => {
 
 
 router.delete("/bulkDelete", (req, res, next) => {
-  console.log(req.body);
   TodoModel.deleteMany({ _id: { $in: req.body } }, (err, response) => {
     if (err) {
       res.status(404).json({

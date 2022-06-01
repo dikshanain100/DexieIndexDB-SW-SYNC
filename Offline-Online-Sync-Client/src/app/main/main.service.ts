@@ -90,9 +90,9 @@ export class MainService {
 
   //add todo to the indexedDB on offline mode
   private async addToIndexedDb(todo: any) {
-    this._dexieService.addDbInstance.indexdb_todos.add(todo)
+    this._dexieService.dbInstance.indexdb_todos_add.add(todo)
       .then(async () => {
-        const allItems: any[] = await this._dexieService.addDbInstance["indexdb_todos"].toArray();
+        const allItems: any[] = await this._dexieService.dbInstance["indexdb_todos_add"].toArray();
         console.log('saved in DB, DB is now', allItems);
       })
       .catch(e => {
@@ -104,9 +104,9 @@ export class MainService {
 
   //add to delete database if offline
   private async addToDeleteDatabase(todo: any) {
-    this._dexieService.deleteDbInstance.indexdb_todos.add(todo)
+    this._dexieService.dbInstance.indexdb_todos_delete.add(todo)
       .then(async () => {
-        const allItems: any[] = await this._dexieService.deleteDbInstance["indexdb_todos"].toArray();
+        const allItems: any[] = await this._dexieService.dbInstance["indexdb_todos_delete"].toArray();
         console.log('saved in DB, DB is now', allItems);
       })
       .catch(e => {
