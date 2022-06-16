@@ -15,8 +15,7 @@ export class MatDesTableComponent implements OnInit {
   displayedColumns = [];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  storageName = 'publicAPI';
-  user1 = 'User1';
+
 
   constructor(
     private _matDesTableService: MatDesTableService,
@@ -34,6 +33,7 @@ export class MatDesTableComponent implements OnInit {
         (res: any) => {
           console.log('res :: ', res);
           this.fillTable(res);
+          this.addTableToIndexDB(res);
         },
         (err: Object) => {
           console.log('err : ', err);
@@ -41,7 +41,7 @@ export class MatDesTableComponent implements OnInit {
         .catch((err: Object) => {
         });
     } else {
-     //  this.getAllCustomerData();
+     //   this.getAllCustomerData();
     }
   }
 
@@ -71,28 +71,15 @@ export class MatDesTableComponent implements OnInit {
 
 
 
-  // Dynamically add new table to index db
-  public loadRecords() {
+  //Dynamically adding table to index db
+  public addTableToIndexDB(response) {
     let tableName = "matDesc";
     let tableSchema = "++_id, value"
 
-    this._dexieService.addNewTables(tableName, tableSchema).then(
+    this._dexieService.updateSchema(tableName, tableSchema).then(
       (res: any) => {
-        console.log('new table added');
-        // fetch data from API and put it inside the table
-        let data = {};
-        this._matDesTableService.getDetails(data).then(
-          (res: any) => {
-            console.log('res :: ', res);
-            //fill data in indexdb 
-            this.addToIndexDB(res, tableName);
-          },
-          (err: Object) => {
-            console.log('err from api call: ', err);
-          })
-          .catch((err: Object) => {
-          });
-
+        //fill data in indexdb 
+        this.addToIndexDB(response, tableName);
       },
       (err: Object) => {
         console.log('err when table is not added to DB: ', err);
@@ -100,45 +87,14 @@ export class MatDesTableComponent implements OnInit {
       .catch((err: Object) => {
       });
 
-
-  //     //todo -add
-      // let tableName_Add = "indexdb_todos_add";
-      // let tableSchema_Add = "title,content";
-      // this._dexieService.addNewTables(tableName_Add, tableSchema_Add).then(
-      //   (res: any) => {
-      //    // let data = {title:"qqqq",content:"q"}
-      //     let dataA = {k: "a"};
-      //     this.addToIndexDB(dataA, tableName_Add);
-      //   },
-      //   (err: Object) => {
-      //     console.log('err : ', err);
-      //   })
-      //   .catch((err: Object) => {
-      //   });
-
-
-      //todo --delete
-      // let tableName_Delete = "indexdb_todos_delete";
-      // let tableSchema_Delete = "_id"
-      // this._dexieService.addNewTables(tableName_Delete, tableSchema_Delete).then(
-      //   (res: any) => {
-      //     // let data = {_id:"6297048c7f97bd222c919cb8"}
-      //     let dataD = {k: "d"};;
-      //     this.addToIndexDB(dataD, tableName_Delete);
-  
-      //   },
-      //   (err: Object) => {
-      //     console.log('err : ', err);
-      //   })
-      //   .catch((err: Object) => {
-      //   });
-
   }
 
 
+
+  //Adding data to index db
   private async addToIndexDB(data: any, tableName) {
-    console.log(" this._dexieService :: ",  this._dexieService);
-    let testData = {k: "v"};
+    console.log(" this._dexieService :: ", this._dexieService);
+    let testData = { k: "v" };
     this._dexieService.dbInstance[tableName].add(testData)
       .then(async () => {
         const allItems: any[] = await this._dexieService.dbInstance["matDesc"].toArray();

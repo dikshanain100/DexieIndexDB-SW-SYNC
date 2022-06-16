@@ -3,6 +3,7 @@ import Dexie from 'dexie'; // wrapper for IndexedDB
 import { OfflineService } from '../services/offline.service';
 import { InternalHttpService } from '../../shared/services/internal-http.service';
 import { URLConstants } from '../../shared/URLConstants';
+import { HeaderRowOutlet } from '@angular/cdk/table';
 // import { DBStores } from '../../shared/DBStores';
 
 @Injectable({
@@ -29,74 +30,54 @@ export class DexieService {
 
 
 
-  load() {
-    this.createIndexedDatabase();
+  onload() {
     this.registerToEvents();
     this.listenToEvents();
+    this.createIndexedDatabase().catch(err => console.error(err));
+
   }
 
 
-
-  private createIndexedDatabase() {
-    //create the indexedDB to store offline data(to be added)
-    console.log('inside createIndexedDatabase ');
-    if (!this.db) {
-      console.log('first time open')
-      this.db = new Dexie("DexieDatabase");
-
-      this.db.version(1).stores({
-        indexdb_todos_add: "title,content",
-        indexdb_todos_delete: "_id"
-      });
-
-      this.db.open()
-        .then(function (db) {
-          console.log("Database is at version: " + db.verno);
-          db.tables.forEach(function (table) {
-            console.log("Found a table with name: " + table.name);
-          });
-
-        })
-        .catch(function (err) {
-          console.error(err.stack || err);
-        });
-    }
-  }
-
-  // COMMENT IT IF YOU WANT TO CHECK NORMAL BEHAVIOUR OF INDEX DB
-  // // Open database dynamically:
-  async addNewTables(_tableName, _tableSchema) {
-    console.log('_tableName :: ', _tableName);
-    console.log('_tableSchema ::: ', _tableSchema);
-    console.log('this.db ', this.db)
-
-
-
-    // this.db = new Dexie('database');   /////adding this resolves version error but now had to manually delete 
-    //db to see newly added value and everytime some value is added, db version is upgraded
-    //bcz new instance is craeted and hence schema exist is false
+  // Create/open index db in dynamic mode
+  async createIndexedDatabase() {
+    this.db = new Dexie('DexieDatabase');
     if (!(await Dexie.exists(this.db.name))) {
       console.log("Db does not exist");
-      this.db.version(1).stores({});
+      this.db.version(1).stores({
+        //If you add store here, everytime you refresh page, db version will be upgraded
+        // indexdb_todos_add: "title,content",
+        // indexdb_todos_delete: "_id"
+      });
     }
-    console.log('this.db before opening :: ', this.db);
-    await this.db.open();
-    console.log("Could open DB")
-
-    // Add a table with some indexes:    
-    console.log('_tableName :: ', _tableName);
-    console.log('_tableSchema :: ', _tableSchema);
-    this.db = await this.changeSchema(this.db, { [_tableName]: _tableSchema });
-    console.log("Db after updating schema : ", this.db)
-
-    //set value in localstorage
-    localStorage.setItem('dbInstance', this.db);
 
 
+    await this.db.open()
+      .then(function (db) {
+        console.log("Database is at version: " + db.verno);
+        db.tables.forEach(function (table) {
+          console.log("Found a table with name: " + table.name);
+        });
+
+      })
+      .catch(function (err) {
+        console.error(err.stack || err);
+      });
+
+
+    await this.createSchema();
   }
 
-  // COMMENT IT IF YOU WANT TO CHECK NORMAL BEHAVIOUR OF INDEX DB
-  // DYNAMICALLY ADD TABLE TO INDEX DB
+
+  async createSchema() {
+    this.db = await this.changeSchema(this.db, { indexdb_todos_add: 'title,content' });
+    this.db = await this.changeSchema(this.db, { indexdb_todos_delete: 'id' });
+  }
+
+  async updateSchema(_tableName, _tableSchema) {
+    this.db = await this.changeSchema(this.db, { [_tableName]: _tableSchema });
+  }
+
+
   async changeSchema(db, schemaChanges) {
     db.close();
     const newDb = new Dexie(db.name);
@@ -109,7 +90,7 @@ export class DexieService {
       return await newDb.open();
     }
 
-    // Extract current schema in dexie format ::
+    // Extract current schema in dexie format:
     const currentSchema = db.tables.reduce((result, { name, schema }) => {
       result[name] = [
         schema.primKey.src,
@@ -118,18 +99,23 @@ export class DexieService {
       return result;
     }, {});
 
-    console.log("Version before upgrade : " + db.verno);
+    console.log("Version before upgrade: " + db.verno);
     console.log("Current Schema: ", currentSchema);
 
     // Tell Dexie about current schema:
     newDb.version(db.verno).stores(currentSchema);
 
 
+
     // Tell Dexie about next schema:
     //update version only if new schema is added
-    var schemaExist = db.hasOwnProperty(Object.keys(schemaChanges)[0]);
-    console.log('schemaExist :: ', schemaExist);
+    let dbTables = [];
+    db.tables.forEach(function (table) {
+      dbTables.push(table.name);
+    });
+    var schemaExist = dbTables.includes(Object.keys(schemaChanges)[0])
     if (!schemaExist) {
+      console.log('upgarding schema')
       newDb.version(db.verno + 1).stores(schemaChanges);
     }
 
@@ -139,8 +125,14 @@ export class DexieService {
   }
 
 
-  /////////////////////////////////////////////
 
+
+
+
+
+
+
+  //////////////////////////TESTIINNGGGGG//////////////////////////
 
 
   public registerToEvents() {
@@ -237,10 +229,6 @@ export class DexieService {
 
     })
   }
-
-
-
-
 
 
 }

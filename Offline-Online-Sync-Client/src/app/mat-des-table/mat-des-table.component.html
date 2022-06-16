@@ -2,14 +2,14 @@
   <div class="row mt-3">
 
     <!-- Dynamically add new table to index db -->
-     <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 ">
+     <!-- <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 ">
       <button class="btn btn-block spacer-top-sm " (click)="loadRecords();"
         style="margin-left: 16px; color: white; background-color: #0062cc; max-width: fit-content">
         Load Records
       </button>
-    </div>
+    </div> -->
 
-    <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 ">
+    <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 " *ngIf="dataSource">
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
         <!--- Note that these columns can be defined in any order.

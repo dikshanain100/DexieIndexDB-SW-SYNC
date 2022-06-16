@@ -5,6 +5,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { APP_INITIALIZER } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
 
 import { SharedModule } from './shared/shared.module';
 import { DexieService } from './shared/services/dexie.service';
@@ -15,6 +16,7 @@ import { DexieService } from './shared/services/dexie.service';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     AppRoutingModule,
   ],
@@ -25,7 +27,7 @@ import { DexieService } from './shared/services/dexie.service';
       provide: APP_INITIALIZER,
       useFactory: (ds: DexieService) => () =>
       {        
-         ds.load()
+         ds.onload()
         // return ds.load()
       } ,
       deps: [DexieService],
