@@ -104,6 +104,7 @@ export class MainService {
   //add to delete database if offline
   private async addToDeleteDatabase(todo: any) {
     console.log('todo : ', todo);
+    console.log('db instance :: ',   this._dexieService.dbInstance);
     this._dexieService.dbInstance.indexdb_todos_delete.add(todo)
       .then(async () => {
         const allItems: any[] = await this._dexieService.dbInstance["indexdb_todos_delete"].toArray();

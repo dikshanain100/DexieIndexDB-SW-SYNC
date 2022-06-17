@@ -5,6 +5,8 @@ import { OfflineService } from '..//shared/services/offline.service';
 import { DexieService } from '../shared/services/dexie.service';
 import { MatDesTableService } from './mat-des-table.service';
 
+
+// this module puts data in indexdb when online and fetches from it when offline (no involvment of backend db here)
 @Component({
   selector: 'app-mat-des-table',
   templateUrl: './mat-des-table.component.html',
@@ -15,6 +17,8 @@ export class MatDesTableComponent implements OnInit {
   displayedColumns = [];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  public tableName = "matDesc";
+  public tableSchema = "++_id, value"
 
 
   constructor(
@@ -26,7 +30,7 @@ export class MatDesTableComponent implements OnInit {
 
   ngOnInit(): void {
     var isOnline = this.offlineService.isOnline;
-
+    console.log('isOnline : ', isOnline);
     if (isOnline) {
       let data = {};
       this._matDesTableService.getDetails(data).then(
@@ -41,7 +45,12 @@ export class MatDesTableComponent implements OnInit {
         .catch((err: Object) => {
         });
     } else {
-     //   this.getAllCustomerData();
+      //setting a delay as getting error on query ; since DB congiuration still happening , as table is created on page load
+      //but in actual scenario, won't get this error as table will be craeted from urls, on application start and not component load
+      setTimeout(()=>{
+        this.getDataFromIndexDB(this.tableName);
+      }, 4000)
+      
     }
   }
 
@@ -56,30 +65,17 @@ export class MatDesTableComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  // get data from indexed db
-  // public getAllCustomerData() {
-  //   this._local.getAll(this.storageName).then((res) => {
-  //     if (res) {
-  //       console.log('data received from indexed db ', res);
-  //       this.dataSource = new MatTableDataSource(res[0].entries);
-  //       this.dataSource.paginator = this.paginator;
-  //     } else {
-  //       console.log('Could not get record from index db!!');
-  //     }
-  //   });
-  // }
 
 
 
   //Dynamically adding table to index db
   public addTableToIndexDB(response) {
-    let tableName = "matDesc";
-    let tableSchema = "++_id, value"
-
-    this._dexieService.updateSchema(tableName, tableSchema).then(
+    this._dexieService.updateSchema(this.tableName, this.tableSchema).then(
       (res: any) => {
         //fill data in indexdb 
-        this.addToIndexDB(response, tableName);
+        this.addToIndexDB(response, this.tableName);
+        //testing 
+       //this.getDataFromIndexDB(this.tableName);
       },
       (err: Object) => {
         console.log('err when table is not added to DB: ', err);
@@ -93,18 +89,25 @@ export class MatDesTableComponent implements OnInit {
 
   //Adding data to index db
   private async addToIndexDB(data: any, tableName) {
-    console.log(" this._dexieService :: ", this._dexieService);
-    let testData = { k: "v" };
-    this._dexieService.dbInstance[tableName].add(testData)
+    this._dexieService.dbInstance[tableName].add(data)  //adding 
       .then(async () => {
-        const allItems: any[] = await this._dexieService.dbInstance["matDesc"].toArray();
-        console.log('saved in DB, DB is now', allItems);
+        const allItems: any[] = await this._dexieService.dbInstance[tableName].toArray();  //getting values after addition
       })
       .catch(e => {
         alert('Error when adding to index db: ' + (e.stack || e));
       });
   }
 
+  //Getting data from indexed db
+  private async getDataFromIndexDB(tableName) {
+    console.log('isnide get data from in db :: ', tableName)
+    const item: any[] = await this._dexieService.dbInstance[tableName].get({_id : 2});
+   // const item: any[]= await this._dexieService.dbInstance.matDesc.toArray()
+  
+    console.log('item :: ', item);
+    this.fillTable(item);
+   // this.fillTable(item[0]);
+  }
 
 
 

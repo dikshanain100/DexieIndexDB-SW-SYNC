@@ -4,7 +4,7 @@ import { Router, ActivatedRoute, Route } from "@angular/router";
 import { Subscription } from 'rxjs';
 import { MainService } from './main.service';
 
-
+// This module takes data and id offline and once user comes online, posts the data to DB
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',

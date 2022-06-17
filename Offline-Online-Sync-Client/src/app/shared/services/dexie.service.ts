@@ -70,7 +70,7 @@ export class DexieService {
 
   async createSchema() {
     this.db = await this.changeSchema(this.db, { indexdb_todos_add: 'title,content' });
-    this.db = await this.changeSchema(this.db, { indexdb_todos_delete: 'id' });
+    this.db = await this.changeSchema(this.db, { indexdb_todos_delete: '_id' });
   }
 
   async updateSchema(_tableName, _tableSchema) {
