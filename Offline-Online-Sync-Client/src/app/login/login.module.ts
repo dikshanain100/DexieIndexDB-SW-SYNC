@@ -1,17 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormTableRoutingModule } from './form-table-routing.module';
-import {FormTableComponent} from './form-table.component';
+
+import { LoginRoutingModule } from './login-routing.module';
+import { LoginComponent } from './login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
-  declarations: [FormTableComponent],
+  declarations: [LoginComponent],
   imports: [
     CommonModule,
-    FormTableRoutingModule,
+    LoginRoutingModule,
     ReactiveFormsModule,
     FormsModule,
   ]
 })
-export class FormTableModule { }
+export class LoginModule { }

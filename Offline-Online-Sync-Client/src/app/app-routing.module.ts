@@ -18,6 +18,14 @@ const routes: Routes = [
   {
     path: 'matTable',
     loadChildren: './mat-des-table/mat-des-table.module#MatDesTableModule'
+  },
+  {
+    path: 'login',
+    loadChildren: './login/login.module#LoginModule'
+  },
+  {
+    path: 'register',
+    loadChildren: './register/register.module#RegisterModule'
   }
 ]
 
