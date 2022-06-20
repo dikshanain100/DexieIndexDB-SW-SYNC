@@ -1,14 +1,12 @@
 require('dotenv').config();
 const express = require("express");
 const server = express();
-
-
-//database connection
-const database = require("./database/connection");
-//parser
 const bodyParser= require("body-parser");
-//cors
 const cors = require("cors");
+const mongoose = require("mongoose");
+const item = require("./routes/item");
+const database = require("./database/connection");
+
 
 
 //body parser for the params
@@ -20,11 +18,7 @@ server.use(cors());
 
 
 
-//mongoose
-const mongoose = require("mongoose");
-//routes
-const item = require("./routes/item");
-
+//database connection
 mongoose.connect(
     database.connection, { useNewUrlParser: true })
   .then(connection => {
