@@ -1,47 +1,61 @@
 require('dotenv').config();
 const express = require("express");
-const server = express();
+const app = express();
 const bodyParser= require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const port = process.env.PORT || 8080;
 const item = require("./routes/item");
 const database = require("./database/connection");
-
-
-
-//body parser for the params
-server.use(bodyParser.urlencoded({extended:false}));
-server.use(bodyParser.json());
-
-//user CORS
-server.use(cors());
+const session = require('express-session');
+const MongoDBSession = require('connect-mongodb-session')(session); // to store session info in MongoDB
 
 
 
 //database connection
 mongoose.connect(
-    database.connection, { useNewUrlParser: true })
-  .then(connection => {
-    console.log("connection stablished")
+  database.connection, { useNewUrlParser: true })
+.then(connection => {
+  console.log("connection stablished")
+})
+.catch(error => {
+  console.log(database);
+  console.log({
+      error : {
+          name : error.name,
+          message : error.message,
+          errorCode: error.code,
+          codeName: error.codeName
+      }
   })
-  .catch(error => {
-    console.log(database);
-    console.log({
-        error : {
-            name : error.name,
-            message : error.message,
-            errorCode: error.code,
-            codeName: error.codeName
-        }
-    })
-  });
+});
 
-  server.use((req, res, next)=>{
-    //we say what we want to allow, you can whitelist IPs here or domains
+
+
+app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.json());
+app.use(cors());
+
+//store session created in mong db 
+const userStore= new MongoDBSession({
+  uri :  database.connection,
+  collection : 'user_session'
+})
+
+//create session
+app.use(session({
+  secret : 'key that will sign the cookie',
+  resave : false,  //'true' menas for every req to server, we want to create a new session and we don't want to care about if it's a same user/browser
+  saveUninitialized : false, //if we have not touched or modified the session, we don't want it to be saved.
+  store: userStore
+}))
+
+
+
+
+app.use((req, res, next)=>{
     res.header("Access-Control-Allow-Origin", "*"); 
-    //what kind of headers we are allowing
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");  
-
     //check for the options request from browsers
     //this will always be sent
     if(req.method === "OPTIONS"){
@@ -56,11 +70,20 @@ mongoose.connect(
     next();
 });
 
-server.use("/", item);
+
+app.use("/", item);
+
+//session
+app.get("/", (req,res)=>{
+  req.session.isAuth = true;  //cookie gets created bcz of this
+  console.log('session :: ',req.session);
+  console.log('session id :: ', req.session.id); //part of sid present in browser - cookie... this id is used to mintain session for some user
+  res.send("hello session tut");
+})
 
 
 // Error message is send if router doesn't exist
-server.use((req,res,next)=>{
+app.use((req,res,next)=>{
   const error = new Error("Unable to manage the request");
   //send a status code error
   error.status= 404;
@@ -69,7 +92,7 @@ server.use((req,res,next)=>{
 })
 
 //error message 
-server.use((error, req, res, next)=>{
+app.use((error, req, res, next)=>{
   res.status(error.status || 500);
   res.json({
       "error": {
@@ -80,12 +103,8 @@ server.use((error, req, res, next)=>{
 
 
 
-
-const port = process.env.PORT || 8080;
-
-
 //create the server
-server.listen(port, ()=>{
+app.listen(port, ()=>{
     console.log("Server is running @ localhost:8080");
 });
 
