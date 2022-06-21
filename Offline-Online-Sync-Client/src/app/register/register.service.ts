@@ -11,10 +11,10 @@ export class RegisterService {
     private _httpClient: InternalHttpService,
   ) { }
 
-    //get all todos from the mongodb
-    getAllTodos(data) {
+    //post register data to be stored in mongo db
+    postRegister(data) {
       return new Promise((resolve, reject) => {
-        this._httpClient.call(data, URLConstants.todosAPI, 'GET').subscribe(
+        this._httpClient.call(data, URLConstants.registerAPI, 'POST').subscribe(
           res => {
             resolve(res)
           },

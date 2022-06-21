@@ -5,6 +5,9 @@ export class URLConstants {
     public static bulkDeleteAPI = 'bulkDelete'
     public static todosAPI = 'todos'
     public static todoAPI = 'todo'
+    public static loginAPI = 'login'
+    public static registerAPI = 'register'
+    public static logoutAPI = 'logout'
     
 }
 

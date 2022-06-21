@@ -24,10 +24,14 @@ const routes: Routes = [
     loadChildren: './login/login.module#LoginModule'
   },
   {
-    path: 'register',
+    path: 'register',   
     loadChildren: './register/register.module#RegisterModule'
+  },
+  {
+    path: 'landing',   
+    loadChildren: './landing-page/landing-page.module#LandingPageModule'
   }
-]
+]   
 
 
 @NgModule({

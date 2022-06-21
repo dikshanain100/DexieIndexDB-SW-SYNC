@@ -5,17 +5,17 @@ import { URLConstants } from '../shared/URLConstants';
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
+export class LandingPageService {
 
-  constructor(
-    private _httpClient: InternalHttpService,
-  ) { }
+  constructor(  
+    private _httpClient: InternalHttpService
+    ) { }
 
 
-   //post login data to service 
-   postLogin(data) {
+  //post login data to service 
+   logout(data) {
     return new Promise((resolve, reject) => {
-      this._httpClient.call(data, URLConstants.loginAPI, 'POST').subscribe(
+      this._httpClient.call(data, URLConstants.logoutAPI, 'POST').subscribe(
         res => {
           resolve(res)
         },
@@ -24,5 +24,4 @@ export class LoginService {
     });
   }
 
-  
 }

@@ -1,12 +1,12 @@
 $black-color: #333;
-$header-size : 20px;
+$header-size : 24px;
 
 
 
 .form-header{
     font-size : $header-size;
     color : $black-color;
-    font-weight : 500;
+    font-weight : bold;
 }
 
 label{
@@ -38,4 +38,12 @@ label{
 .cancel-button{
     margin-left: 12px; 
     @extend .footer-button;
+}
+
+.container{
+    padding-bottom : 0px !important;
+}
+
+.header-panel-row{
+ width : 50%;
 }

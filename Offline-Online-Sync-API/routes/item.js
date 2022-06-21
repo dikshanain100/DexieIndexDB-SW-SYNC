@@ -113,4 +113,35 @@ router.get("/entries", (req, res, next) => {
 });
 
 
+
+router.post("/login", (req, res, next) => {
+  console.log('inside login :: ', req.body)
+  // TodoModel.insertMany(req.body, (err, docs) => {
+  //   if (err) {
+  //     res.status(400).json({
+  //       message: "The Todos were not saved",
+  //       errorMessage: err.message
+  //     })
+  //   } else {
+  //     res.status(200).json({
+  //       message: "Bulk document creation successful",
+
+  //     })
+  //   }
+  // })
+})
+
+router.post("/register", (req, res, next) => {
+  console.log('inside register :: ', req.body)
+
+})
+
+
+router.post("/logout", (req, res, next) => {
+  console.log('inside logout :: ', req.body)
+
+})
+
+
+
 module.exports = router;

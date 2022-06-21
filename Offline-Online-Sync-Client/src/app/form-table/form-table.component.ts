@@ -17,7 +17,7 @@ export class FormTableComponent implements OnInit {
   notesCount = 0; // Total number of items in all pages. initialize as a zero
   pageModel = { currentPage: 1 }; // Current page number. First page is 1.-->
   pageSizeSelected = 10; // Max
-  storageName = "customer";
+ // storageName = "customer";
 
   constructor(
     public formBuilder: FormBuilder,
