@@ -55,7 +55,7 @@
           <div class="form-group ">
             <div class="customerDiv">
               <label for="customer_password" class="labelFont">Password</label>
-              <input type="text" class="form-control" id="customer_password" placeholder="Enter password"
+              <input type="password" class="form-control" id="customer_password" placeholder="Enter password"
                 formControlName="customer_password"
                 [ngClass]="{'is-invalid': (submitted && fetch.customer_password.errors) ||(fetch.customer_password.errors && (fetch.customer_password.touched || fetch.customer_password.dirty))}">
               <!-- to make it appear red and acc to condition -->
