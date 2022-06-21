@@ -116,6 +116,15 @@ router.get("/entries", (req, res, next) => {
 
 });
 
+//Middlelayer ::  won't allow user to access application without login
+const isAuth = (req, res, next)=>{
+  if(req.session.isAuth){
+    next()
+  }
+  else{
+    res.redirect("/login")
+  }
+}
 
 
 router.post("/login",  (req, res, next) => {
@@ -136,6 +145,7 @@ router.post("/login",  (req, res, next) => {
           return res.redirect('/login')
         }
       
+        req.session.isAuth = true;
         res.redirect('landing-page');
       }
 
@@ -156,7 +166,10 @@ router.post("/register", async (req, res, next) => {
   let user = await UserModel.findOne({ custEmail });
   //check this
   if (user) {
-    return res.redirect('/register');
+    return  res.status(200).json({
+      message: "User exist",
+      userExist : true,
+    })
   }
 
   const hashedPwd = await bcrypt.hash(custPassword, 12);
@@ -168,19 +181,30 @@ router.post("/register", async (req, res, next) => {
 
   userData.save((err) => {
     if (err) {
-      res.status(400).json({
+      return  res.status(400).json({
         message: "The user data was not saved",
+        userExist : true,
         errorMessage: err.message
       })
     } else {
-      res.status(201).json({
-        message: "User data was saved successfully"
+      return  res.status(200).json({
+        message: "User data was saved successfully",
+        userExist : false,
       })
     }
   })
 
 
+ 
+
 })
+
+
+router.post("/landing", isAuth,  (req, res) => {
+  console.log('inside landing :: ', req.body)
+//render landing page here
+})
+
 
 
 router.post("/logout", (req, res, next) => {

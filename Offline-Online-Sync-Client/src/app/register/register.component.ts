@@ -25,7 +25,7 @@ export class RegisterComponent implements OnInit {
   }
 
 
-  
+
   public createForm() {
     this.customerForm = this.formBuilder.group({
       customer_username: ['', Validators.required],
@@ -44,12 +44,12 @@ export class RegisterComponent implements OnInit {
     var reqObj = {
       custUsername: '',
       custEmail: '',
-      custPassword : ''
+      custPassword: ''
     };
 
     if (
       this.customerForm.controls.customer_username.valid &&
-      this.customerForm.controls.customer_email.valid && 
+      this.customerForm.controls.customer_email.valid &&
       this.customerForm.controls.customer_password.valid
     ) {
       console.log('form valid ', this.customerForm);
@@ -57,7 +57,7 @@ export class RegisterComponent implements OnInit {
       reqObj.custEmail = this.customerForm.controls.customer_email.value;
       reqObj.custPassword = this.customerForm.controls.customer_password.value;
 
-     this.postRegister(reqObj);
+      this.postRegister(reqObj);
     } else {
       console.log('form invalid');
       console.log('form ', this.customerForm);
@@ -79,19 +79,31 @@ export class RegisterComponent implements OnInit {
   postRegister(formData) {
     this._registerService.postRegister(formData).then(
       (res: any) => {
-        // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
-        //   this.router.navigate(["/main"]));
+        console.log('res ::', res);
+        if (res.userExist) {
+          alert('User exist ! Please login on login page.')
+        }
+        else {
+          alert('User added successfully to DB.')
+        }
+
         this.customerForm.reset();
+        this._router.navigateByUrl('/login')
       },
-      (err: Object) => {
-        console.log('err from backend service: ', err);
+      (err) => {
+        if (err.error.userExist) {
+          alert('User exist ! Please login on login page.')
+
+          this.customerForm.reset();
+          this._router.navigateByUrl('/login')
+        }
       })
       .catch((err: Object) => {
       });
   }
 
 
-  login(){
+  login() {
     this._router.navigateByUrl('/login')
   }
 
