@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import {InternalHttpService} from './internal-http.service';
 import { OfflineService } from './offline.service';
 import { DexieService } from './dexie.service';
+import { AuthGuard } from './auth.guard';
+
 
 
 @NgModule({
@@ -13,7 +15,8 @@ import { DexieService } from './dexie.service';
   providers:[
     InternalHttpService, 
     OfflineService,
-    DexieService
+    DexieService,
+    AuthGuard
   ]
 })
 

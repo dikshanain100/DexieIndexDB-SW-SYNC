@@ -8,6 +8,7 @@ export class URLConstants {
     public static loginAPI = 'login'
     public static registerAPI = 'register'
     public static logoutAPI = 'logout'
+    public static landingAPI ='landing';
     
 }
 

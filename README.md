@@ -19,3 +19,7 @@ Dexie DB - Library to store data in Index DB
 
 Dexie - version upgrade , adding data to it giving error :
 https://stackoverflow.com/questions/54728942/cant-update-index-dynamically-with-dexie-sample-code
+
+
+Server side session : express-session
+https://github.com/bersling/express-session-angular-ngx 

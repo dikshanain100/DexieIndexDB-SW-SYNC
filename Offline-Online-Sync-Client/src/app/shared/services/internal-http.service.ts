@@ -12,7 +12,7 @@ export class InternalHttpService {
   /**
    * if you want to pass without headers
    */
-  call(data, api, method) { 
+  call(data, api, method) {
     const headers = new HttpHeaders();
     return this.http.request(method, this.config.api_url + api, {
       body: data
@@ -28,4 +28,35 @@ export class InternalHttpService {
       headers: header
     })
   }
+
+
+  /**
+ * if you want to pass without headers for Login : additional option added for credentials
+ * 'withCredentials' indicates whether or not cross-site Access-Control 
+ * requests should be made using credentials
+ */
+  callLogin(data, api, method) {
+    const headers = new HttpHeaders();
+    let options = {
+      body: data,
+      withCredentials: true
+    }
+    return this.http.request(method, this.config.api_url + api, options)
+  }
+
+  /**
+* if you want to pass without headers for Logout : additional option added for credentials
+* 'withCredentials' indicates whether or not cross-site Access-Control 
+* requests should be made using credentials
+*/
+  callLogout(data, api, method) {
+    const headers = new HttpHeaders();
+    let options = {
+      body: data,
+      withCredentials: true
+    }
+    return this.http.request(method, this.config.api_url + api, options)
+  }
+
+
 }

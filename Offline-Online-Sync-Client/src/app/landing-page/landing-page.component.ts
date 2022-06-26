@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { LandingPageService } from './landing-page.service';
 
 @Component({
@@ -10,21 +11,19 @@ export class LandingPageComponent implements OnInit {
 
   constructor(
     private _landingPageService: LandingPageService,
+    private _router : Router
   ) { }
 
   ngOnInit(): void {
-    console.log('hhh')
+   // this.checkSessionValidity();
   }
 
 
-
-  
-  logout() {
+  checkSessionValidity(){
     let data = {};
-    this._landingPageService.logout(data).then(
+    this._landingPageService.sessionValidity(data).then(
       (res: any) => {
-        // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
-        //   this.router.navigate(["/main"]));
+        console.log('res : ', res)
     
       },
       (err: Object) => {
@@ -33,6 +32,30 @@ export class LandingPageComponent implements OnInit {
       .catch((err: Object) => {
       });
   }
+
+  
+  logout() {
+    let data = {};
+    this._landingPageService.logout(data).then(
+      (res: any) => {
+        console.log('logout comp resp ::: ', res);
+        // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
+
+      
+
+
+           this._router.navigate(["/login"]);
+    
+      },
+      (err: Object) => {
+        console.log('err from backend service: ', err);
+      })
+      .catch((err: Object) => {
+      });
+  }
+
+
+
 
 
 }

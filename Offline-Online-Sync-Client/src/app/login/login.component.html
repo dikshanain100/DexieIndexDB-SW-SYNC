@@ -5,7 +5,7 @@
       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 " align="left">
         <div class="form-header mb-4">LOGIN</div>
       </div>
-  
+
       <!-- Register -->
       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 " align="right">
         <button class="btn btn-block register-btn" (click)="register();"
@@ -31,17 +31,7 @@
               <input type="text" class="form-control" id="customer_email" placeholder="Enter email"
                 formControlName="customer_email"
                 [ngClass]="{'is-invalid': (submitted && fetch.customer_email.errors) ||(fetch.customer_email.errors && (fetch.customer_email.touched || fetch.customer_email.dirty))}">
-              <!-- to make it appear red and acc to condition -->
 
-              <!-- {{submitted}}
-                  {{fetch.customer_email.errors.required}}
-                    <div *ngIf="(fetch.customer_email.errors)">
-                        hii
-                    </div>
-
-                    <span *ngIf="(submitted)">
-                        hii submitted
-                    </span> -->
 
               <span class="help-block  error-block" *ngIf="(submitted && fetch.customer_email.errors)"> there
                 <p *ngIf="fetch.customer_email.errors?.required">
@@ -58,7 +48,7 @@
               <input type="password" class="form-control" id="customer_password" placeholder="Enter password"
                 formControlName="customer_password"
                 [ngClass]="{'is-invalid': (submitted && fetch.customer_password.errors) ||(fetch.customer_password.errors && (fetch.customer_password.touched || fetch.customer_password.dirty))}">
-              <!-- to make it appear red and acc to condition -->
+
               <span class="help-block  error-block" *ngIf="(submitted && customerForm.get('customer_password').errors)">
                 <p *ngIf="fetch.customer_password.errors?.required">
                   <small>Password is required.</small>
@@ -88,6 +78,35 @@
 
         </div>
       </form>
+
+
+      <!-- Testing -->
+
+      <!-- <div *ngIf="loggedIn === undefined">Loading...</div>
+      <div *ngIf="loggedIn === false" class="logged-out">
+        <input type="text" placeholder="Email" [(ngModel)]="email"><br><br>
+        <input type="text" placeholder="Password" [(ngModel)]="password"><br><br>
+        <button (click)="doLogin()">Login</button>
+      </div> -->
+      <div *ngIf="loggedIn" class="logged-in">
+        You are logged in.
+
+        <!-- <div class="account-balance-wrapper">
+          <div *ngIf="accountBalance">
+            Your balance is: {{accountBalance?.balance}}$
+          </div>
+          <br>
+          <div>
+            <button (click)="getBalance()">Get Account Balance</button>
+          </div>
+        </div> -->
+
+        <button (click)="doLogout()">Log Out</button>
+
+      </div>
+
+
+
     </div>
   </div>
 
