@@ -58,10 +58,10 @@ export class LoginComponent implements OnInit {
 
   // //Testingggggggg
 
-  private customerForm: FormGroup;
-  private  submitted: boolean = false;
-  private loggedIn; //test
-  private  accountBalance; //test
+  public customerForm: FormGroup;
+  public  submitted: boolean = false;
+  public loggedIn; //test
+  public  accountBalance; //test
 
 
 

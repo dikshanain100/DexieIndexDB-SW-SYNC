@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AccountBalanceService } from '../login/account-balance.service';
 import { LandingPageService } from './landing-page.service';
 
 @Component({
@@ -10,17 +9,17 @@ import { LandingPageService } from './landing-page.service';
 })
 export class LandingPageComponent implements OnInit {
 
-  accountBalance;
+  public accountBalance;
 
 
   constructor(
     private _landingPageService: LandingPageService,
     private _router: Router,
-    private balanceService: AccountBalanceService,
+    private _changeDetection: ChangeDetectorRef
   ) { 
-    this.balanceService.accountBalance.subscribe(balance => {
-      this.accountBalance = balance;
-    });
+    // this._landingPageService.accountBalance.subscribe(balance => {
+    //   this.accountBalance = balance;
+    // });
   }
 
   ngOnInit(): void {
@@ -28,9 +27,21 @@ export class LandingPageComponent implements OnInit {
 
 
   getBalance() {
-    this.balanceService.getAccountBalance();
+    let data ={};
+    this._landingPageService.getAccountBalance(data).then(
+      (response)=>{
+       // this.accountBalance = response['balance'];
+        this.accountBalance = response;
+        console.log('this.acc bala :: ', this.accountBalance)
+      //  this._changeDetection.detectChanges();
+      },
+      (error)=>{
+        alert('got error while fetching data');
+      }
+    )
+    .catch((err: Object) => {
+    });
   }
-
 
 
   logout() {

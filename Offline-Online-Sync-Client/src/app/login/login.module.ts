@@ -5,7 +5,6 @@ import { LoginRoutingModule } from './login-routing.module';
 import { LoginComponent } from './login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from './auth.service';
-import { AccountBalanceService } from './account-balance.service';
 import { LoginService } from './login.service';
 
 @NgModule({
@@ -18,8 +17,7 @@ import { LoginService } from './login.service';
   ],
   providers: [
     AuthService,
-    LoginService,
-    AccountBalanceService
+    LoginService
   ],
 })
 export class LoginModule { }

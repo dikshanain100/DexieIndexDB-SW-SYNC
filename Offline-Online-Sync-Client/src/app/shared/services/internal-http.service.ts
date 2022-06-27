@@ -35,22 +35,7 @@ export class InternalHttpService {
  * 'withCredentials' indicates whether or not cross-site Access-Control 
  * requests should be made using credentials
  */
-  callLogin(data, api, method) {
-    const headers = new HttpHeaders();
-    let options = {
-      body: data,
-      withCredentials: true
-    }
-    return this.http.request(method, this.config.api_url + api, options)
-  }
-
-  /**
-* if you want to pass without headers for Logout : additional option added for credentials
-* 'withCredentials' indicates whether or not cross-site Access-Control 
-* requests should be made using credentials
-*/
-  callLogout(data, api, method) {
-    const headers = new HttpHeaders();
+  callCredentials(data, api, method) {
     let options = {
       body: data,
       withCredentials: true

@@ -16,7 +16,7 @@ export class LoginService {
   //post login data to service 
   doLogin(data) {
     return new Promise((resolve, reject) => {
-      this._httpClient.callLogin(data, URLConstants.loginAPI, 'POST').subscribe(
+      this._httpClient.callCredentials(data, URLConstants.loginAPI, 'POST').subscribe(
         res => {
           console.log('res inside login service :: ', res)
           sessionStorage.setItem('loggedIn', 'true');

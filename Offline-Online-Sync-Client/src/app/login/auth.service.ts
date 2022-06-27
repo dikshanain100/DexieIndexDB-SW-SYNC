@@ -19,7 +19,7 @@ export class AuthService {
   getLogin() {
     let data ={};
     return new Promise((resolve, reject) => {
-      this._httpClient.callLogin(data, URLConstants.loginAPI, 'GET').subscribe(
+      this._httpClient.callCredentials(data, URLConstants.loginAPI, 'GET').subscribe(
         res => {
           console.log('inside getLogin fun :: ', res['loggedIn']);
           sessionStorage.setItem('loggedIn', res['loggedIn']);

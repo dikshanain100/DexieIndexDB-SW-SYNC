@@ -1,28 +1,53 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { AuthService } from '../login/auth.service';
-import { LoginService } from '../login/login.service';
 import { InternalHttpService } from '../shared/services/internal-http.service';
 import { URLConstants } from '../shared/URLConstants';
+
+
+interface Balance {
+  balance: number
+}
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class LandingPageService {
 
+  // If you use accountBalance as subject+ http call as subscriber instead of promise,
+  // there is no need of using change detection in component
+  //changes are reflected automatically once you get the data
+  //But with taht approach you will not be able to create separate file for single http call i.e internalHttp
+  // accountBalance: Subject<Balance | null>;
+
   constructor(  
-    private _httpClient: InternalHttpService,
-    private _authService: AuthService,
+    private _httpClient: InternalHttpService
     ) { }
 
 
   //post login data to service 
    logout(data) {
     return new Promise((resolve, reject) => {
-      this._httpClient.callLogout(data, URLConstants.logoutAPI, 'POST').subscribe(
+      this._httpClient.callCredentials(data, URLConstants.logoutAPI, 'POST').subscribe(
         res => {
-       //   this._authService.loggedIn.next(false);
           sessionStorage.setItem('loggedIn', 'false');
 
+          resolve(res)
+        },
+        err => reject(err)
+      );
+    });
+  }
+
+// account balance
+getAccountBalance(data) {
+    return new Promise((resolve, reject) => {
+      this._httpClient.callCredentials(data, URLConstants.balanceAPI, 'GET').subscribe(
+        res => {
           resolve(res)
         },
         err => reject(err)
