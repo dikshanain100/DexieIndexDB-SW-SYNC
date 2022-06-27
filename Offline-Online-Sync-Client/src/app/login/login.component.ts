@@ -58,10 +58,10 @@ export class LoginComponent implements OnInit {
 
   // //Testingggggggg
 
-  customerForm: FormGroup;
-  submitted: boolean = false;
-  loggedIn; //test
-  accountBalance; //test
+  private customerForm: FormGroup;
+  private  submitted: boolean = false;
+  private loggedIn; //test
+  private  accountBalance; //test
 
 
 
@@ -69,7 +69,6 @@ export class LoginComponent implements OnInit {
     private _loginService: LoginService,
     public formBuilder: FormBuilder,
     private _router: Router,
-   // private _authService: AuthService,
   ) {
     this.loggedIn = sessionStorage.getItem('loggedIn');
     console.log('this.loggedIn inside login comp :: ', this.loggedIn);
@@ -108,7 +107,7 @@ export class LoginComponent implements OnInit {
       reqObj.email = this.customerForm.controls.customer_email.value;
       reqObj.password = this.customerForm.controls.customer_password.value;
 
-      this.postLogin(reqObj);
+      this.doLogin(reqObj);
 
     } else {
       console.log('form invalid');
@@ -129,8 +128,8 @@ export class LoginComponent implements OnInit {
 
 
 
-  postLogin(formData) {
-    this._loginService.postLogin(formData).then(
+  doLogin(formData) {
+    this._loginService.doLogin(formData).then(
       (res: any) => {
         console.log('res ::', res);
        // this.toastr.success(res && res.user && res.user.name ? `Welcome ${res.user.name}` : 'Logged in!');

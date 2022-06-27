@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AuthService} from './auth.service';
 import { Subject } from 'rxjs';
-import {ToastrService} from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
 
 
@@ -29,14 +28,13 @@ export class AccountBalanceService {
       if (errorResp.status === 403) {
         // TODO: redirect to login
       }
-      this.toastr.error(errorResp.error && errorResp.error.errorMessage ?
-        errorResp.error.errorMessage :  'Oops, something went wrong.');
+      // this.toastr.error(errorResp.error && errorResp.error.errorMessage ?
+      //   errorResp.error.errorMessage :  'Oops, something went wrong.');
     });
   }
 
   constructor(private http: HttpClient,
-              private authService: AuthService,
-              private toastr: ToastrService) {
+              private authService: AuthService,) {
     this.accountBalance = new Subject();
     // this.authService.loggedIn.subscribe(() => {
     //   this.accountBalance.next(null);

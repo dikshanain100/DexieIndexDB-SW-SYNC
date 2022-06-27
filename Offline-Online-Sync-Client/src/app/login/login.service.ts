@@ -14,7 +14,7 @@ export class LoginService {
 
 
   //post login data to service 
-  postLogin(data) {
+  doLogin(data) {
     return new Promise((resolve, reject) => {
       this._httpClient.callLogin(data, URLConstants.loginAPI, 'POST').subscribe(
         res => {
