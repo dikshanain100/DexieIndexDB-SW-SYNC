@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+import { InternalHttpService } from '../shared/services/internal-http.service';
+import { URLConstants } from '../shared/URLConstants';
 
 
 
@@ -8,28 +8,32 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class AuthService {
-
-  // loggedIn: string;
-
   
   constructor(
-    private http: HttpClient,
+    private _httpClient: InternalHttpService,
   ) {
     this.getLogin();
   }
 
 
-//to implement internal http 
   getLogin() {
-    this.http.get(environment.api_url + 'login', {
-      withCredentials: true // <=========== important!
-    }).subscribe((resp: any) => {
-      console.log('inside getLogin fun :: ', resp);
-      sessionStorage.setItem('loggedIn', resp.loggedIn);
-    }, (errorResp) => {
-    alert('Oops, something went wrong getting the logged in status '+ errorResp);
-    })
+    let data ={};
+    return new Promise((resolve, reject) => {
+      this._httpClient.callLogin(data, URLConstants.loginAPI, 'GET').subscribe(
+        res => {
+          console.log('inside getLogin fun :: ', res['loggedIn']);
+          sessionStorage.setItem('loggedIn', res['loggedIn']);
+          resolve(res)
+        },
+        err => {
+          alert('Oops, something went wrong getting the logged in status '+ err);
+          reject(err)
+        }
+      );
+    });
   }
+
+
 
 }
 

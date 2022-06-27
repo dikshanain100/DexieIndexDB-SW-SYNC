@@ -15,7 +15,6 @@ export class LandingPageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
   }
 
 
@@ -34,8 +33,6 @@ export class LandingPageComponent implements OnInit {
       .catch((err: Object) => {
       });
   }
-
-
 
 
 

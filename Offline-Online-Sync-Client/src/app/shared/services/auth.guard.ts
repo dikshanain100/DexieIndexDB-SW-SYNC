@@ -21,7 +21,6 @@ export class AuthGuard implements CanActivate {
      
       let value = JSON.parse(sessionStorage.getItem('loggedIn'));
       console.log('Auth Guard :: ', ((value == true)? true : false));
-
       return  ((value == true)? true : false);
 
   }
