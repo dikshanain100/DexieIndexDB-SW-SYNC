@@ -2,10 +2,6 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { LoginService } from './login.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from './auth.service';
-// import { AuthService } from './auth.service';
-// import { AccountBalanceService } from './account-balance.service';
-// import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -16,52 +12,10 @@ import { AuthService } from './auth.service';
 })
 export class LoginComponent implements OnInit {
 
-  // // Testinggggggg
-
-  // // email = 'max@gmail.com';
-  // // password = '1234';
-  // email;
-  // password;
-  // loggedIn;
-  // accountBalance;
-
-  // constructor(private authService: AuthService,
-  //   private balanceService: AccountBalanceService,
-  //   private _router: Router
-  //   ) {
-  //   this.authService.loggedIn.subscribe(loggedIn => {
-  //     this.loggedIn = loggedIn;
-  //   });
-  //   this.balanceService.accountBalance.subscribe(balance => {
-  //     this.accountBalance = balance;
-  //   });
-  // }
-
-  //   ngOnInit(): void {
-
-  // }
-
-  // doLogin() {
-  //   this.authService.doLogin(this.email, this.password);
-  // }
-
-  // doLogout() {
-  //   this.authService.logout();
-  // }
-
-  // getBalance() {
-  //   this.balanceService.getAccountBalance();
-  // }
-
-
-
-
-  // //Testingggggggg
-
   public customerForm: FormGroup;
-  public  submitted: boolean = false;
+  public submitted: boolean = false;
   public loggedIn; //test
-  public  accountBalance; //test
+  public accountBalance; //test
 
 
 
@@ -132,7 +86,7 @@ export class LoginComponent implements OnInit {
     this._loginService.doLogin(formData).then(
       (res: any) => {
         console.log('res ::', res);
-       // this.toastr.success(res && res.user && res.user.name ? `Welcome ${res.user.name}` : 'Logged in!');
+        // this.toastr.success(res && res.user && res.user.name ? `Welcome ${res.user.name}` : 'Logged in!');
         this._router.navigateByUrl('/landing'); //here auth guard will come
 
         // if (res.error) {

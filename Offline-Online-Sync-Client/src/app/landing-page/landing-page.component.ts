@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {  Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LandingPageService } from './landing-page.service';
 
@@ -15,11 +15,7 @@ export class LandingPageComponent implements OnInit {
   constructor(
     private _landingPageService: LandingPageService,
     private _router: Router,
-    private _changeDetection: ChangeDetectorRef
   ) { 
-    // this._landingPageService.accountBalance.subscribe(balance => {
-    //   this.accountBalance = balance;
-    // });
   }
 
   ngOnInit(): void {
@@ -30,10 +26,7 @@ export class LandingPageComponent implements OnInit {
     let data ={};
     this._landingPageService.getAccountBalance(data).then(
       (response)=>{
-       // this.accountBalance = response['balance'];
         this.accountBalance = response;
-        console.log('this.acc bala :: ', this.accountBalance)
-      //  this._changeDetection.detectChanges();
       },
       (error)=>{
         alert('got error while fetching data');

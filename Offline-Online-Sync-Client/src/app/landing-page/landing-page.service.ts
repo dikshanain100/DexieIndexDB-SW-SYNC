@@ -1,8 +1,4 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { AuthService } from '../login/auth.service';
 import { InternalHttpService } from '../shared/services/internal-http.service';
 import { URLConstants } from '../shared/URLConstants';
 

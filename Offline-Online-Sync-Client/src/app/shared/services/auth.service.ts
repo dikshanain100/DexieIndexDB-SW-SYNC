@@ -1,14 +1,13 @@
-import {Injectable} from '@angular/core';
-import { InternalHttpService } from '../shared/services/internal-http.service';
-import { URLConstants } from '../shared/URLConstants';
-
+import { Injectable } from '@angular/core';
+import { URLConstants } from '../URLConstants';
+import { InternalHttpService } from './internal-http.service';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  
+
   constructor(
     private _httpClient: InternalHttpService,
   ) {
@@ -17,7 +16,7 @@ export class AuthService {
 
 
   getLogin() {
-    let data ={};
+    let data = {};
     return new Promise((resolve, reject) => {
       this._httpClient.callCredentials(data, URLConstants.loginAPI, 'GET').subscribe(
         res => {
@@ -26,7 +25,7 @@ export class AuthService {
           resolve(res)
         },
         err => {
-          alert('Oops, something went wrong getting the logged in status '+ err);
+          alert('Oops, something went wrong getting the logged in status ' + err);
           reject(err)
         }
       );
