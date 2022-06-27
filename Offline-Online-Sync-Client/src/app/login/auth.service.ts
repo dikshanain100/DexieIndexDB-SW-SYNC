@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AuthService {
 
-  loggedIn: string;
+  // loggedIn: string;
 
   
   constructor(
@@ -24,6 +24,7 @@ export class AuthService {
     this.http.get(environment.api_url + 'login', {
       withCredentials: true // <=========== important!
     }).subscribe((resp: any) => {
+      console.log('inside getLogin fun :: ', resp);
       sessionStorage.setItem('loggedIn', resp.loggedIn);
     }, (errorResp) => {
     alert('Oops, something went wrong getting the logged in status '+ errorResp);

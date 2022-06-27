@@ -19,7 +19,10 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
      
-      return  JSON.parse(sessionStorage.getItem('loggedIn'));
+      let value = JSON.parse(sessionStorage.getItem('loggedIn'));
+      console.log('Auth Guard :: ', ((value == true)? true : false));
+
+      return  ((value == true)? true : false);
 
   }
 

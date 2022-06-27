@@ -69,9 +69,10 @@ export class LoginComponent implements OnInit {
     private _loginService: LoginService,
     public formBuilder: FormBuilder,
     private _router: Router,
-    private _authService: AuthService,
+   // private _authService: AuthService,
   ) {
     this.loggedIn = sessionStorage.getItem('loggedIn');
+    console.log('this.loggedIn inside login comp :: ', this.loggedIn);
   }
 
   ngOnInit(): void {
