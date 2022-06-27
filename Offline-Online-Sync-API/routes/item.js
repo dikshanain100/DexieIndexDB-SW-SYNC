@@ -310,7 +310,6 @@ const appUsers = {
     req.session.user = userWithoutPassword;
     req.session.save();
     console.log('session id inside login ', req.session.id)
-    //next();
     res.status(200).send({
       user: userWithoutPassword
     });
@@ -327,7 +326,7 @@ const appUsers = {
  */
  router.get('/login', (req, res) => {
   console.log('inside get -- login ' , req.session.id)
-  req.session.user ? res.status(200).send({loggedIn: true}) : res.status(200).send({loggedIn: false});
+  req.session.user ? res.status(200).send({loggedIn: 'true'}) : res.status(200).send({loggedIn: 'false'});
 });
 
 /**

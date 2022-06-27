@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Subject } from 'rxjs';
 
 
 
@@ -10,55 +9,30 @@ import { Subject } from 'rxjs';
 })
 export class AuthService {
 
-  loggedIn: Subject<boolean>;
-  testValue = 'diksha';
+  loggedIn: string;
 
   
   constructor(
     private http: HttpClient,
-    // private toastr: ToastrService
   ) {
-    this.loggedIn = new Subject();
-    console.log('this.loggedIn ::  inside auth service const  :: ', this.loggedIn);
     this.getLogin();
   }
 
 
-//  doLogin(email: string, password: string) {
-//     this.http.post(environment.api_url + 'login', {
-//       email: email,
-//       password: password
-//     }, {
-//       withCredentials: true
-//     }).subscribe((resp: any) => {
-//       console.log('res after log in :: ', resp)
-//       this.loggedIn.next(true);
-//       this.toastr.success(resp && resp.user && resp.user.name ? `Welcome ${resp.user.name}` : 'Logged in!');
-//     }, (errorResp) => {
-//       this.loggedIn.next(false);
-//       errorResp.error ? this.toastr.error(errorResp.error.errorMessage) : this.toastr.error('An unknown error has occured.');
-//     });
-//   }
-
+//to implement internal http 
   getLogin() {
     this.http.get(environment.api_url + 'login', {
       withCredentials: true // <=========== important!
     }).subscribe((resp: any) => {
-      console.log('inside getLogin :: ',resp)
-      this.loggedIn.next(resp.loggedIn);
+      sessionStorage.setItem('loggedIn', resp.loggedIn);
     }, (errorResp) => {
-     // this.toastr.error('Oops, something went wrong getting the logged in status')
+    alert('Oops, something went wrong getting the logged in status '+ errorResp);
     })
   }
 
-  // logout() {
-  //   this.http.post(environment.api_url + 'logout', {}, {
-  //     withCredentials: true
-  //   }).subscribe(() => {
-  //     this.loggedIn.next(false);
-  //   });
-  // }
-
-
-
 }
+
+
+//Note: Don't use 'loggedIn' as observable(as given in https://github.com/bersling/express-session-angular-ngx).
+//Instead store it sessionStorage/localStorage..else either put a delay 
+//OR follow https://github.com/auth0-samples/auth0-angular-samples/issues/181

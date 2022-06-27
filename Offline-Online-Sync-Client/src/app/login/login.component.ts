@@ -60,7 +60,7 @@ export class LoginComponent implements OnInit {
 
   customerForm: FormGroup;
   submitted: boolean = false;
-  loggedIn: boolean; //test
+  loggedIn; //test
   accountBalance; //test
 
 
@@ -70,20 +70,8 @@ export class LoginComponent implements OnInit {
     public formBuilder: FormBuilder,
     private _router: Router,
     private _authService: AuthService,
-    // private toastr: ToastrService,
-
-    //test
-   // private balanceService: AccountBalanceService,
-
   ) {
-    //test
-    this._authService.loggedIn.subscribe(loggedIn => {
-      this.loggedIn = loggedIn;
-    });
-
-   // this.balanceService.accountBalance.subscribe(balance => {
-    //  this.accountBalance = balance;
-    //});
+    this.loggedIn = sessionStorage.getItem('loggedIn');
   }
 
   ngOnInit(): void {
@@ -120,7 +108,6 @@ export class LoginComponent implements OnInit {
       reqObj.password = this.customerForm.controls.customer_password.value;
 
       this.postLogin(reqObj);
-     //  this.doLogin( reqObj.email, reqObj.password)
 
     } else {
       console.log('form invalid');
@@ -175,21 +162,6 @@ export class LoginComponent implements OnInit {
       .catch((err: Object) => {
       });
   }
-
-  //test
-  doLogin(email, password) {
-    this._loginService.doLogin(email, password);
-  }
-
-  doLogout() {
-    this._loginService.logout();
-  }
-
-  getBalance() {
-  //  this.balanceService.getAccountBalance();
-  }
-  //test
-
 
 
   // load register component

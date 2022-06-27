@@ -11,41 +11,22 @@ export class LandingPageComponent implements OnInit {
 
   constructor(
     private _landingPageService: LandingPageService,
-    private _router : Router
+    private _router: Router
   ) { }
 
   ngOnInit(): void {
-   // this.checkSessionValidity();
+
   }
 
 
-  checkSessionValidity(){
-    let data = {};
-    this._landingPageService.sessionValidity(data).then(
-      (res: any) => {
-        console.log('res : ', res)
-    
-      },
-      (err: Object) => {
-        console.log('err from backend service: ', err);
-      })
-      .catch((err: Object) => {
-      });
-  }
-
-  
   logout() {
     let data = {};
     this._landingPageService.logout(data).then(
       (res: any) => {
         console.log('logout comp resp ::: ', res);
-        // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
+        sessionStorage.removeItem('loggedIn');
+        this._router.navigate(["/login"]);
 
-      
-
-
-           this._router.navigate(["/login"]);
-    
       },
       (err: Object) => {
         console.log('err from backend service: ', err);

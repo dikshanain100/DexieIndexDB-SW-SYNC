@@ -38,9 +38,9 @@ export class AccountBalanceService {
               private authService: AuthService,
               private toastr: ToastrService) {
     this.accountBalance = new Subject();
-    this.authService.loggedIn.subscribe(() => {
-      this.accountBalance.next(null);
-    });
+    // this.authService.loggedIn.subscribe(() => {
+    //   this.accountBalance.next(null);
+    // });
   }
 
 

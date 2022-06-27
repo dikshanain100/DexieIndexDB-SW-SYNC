@@ -15,29 +15,13 @@ export class LandingPageService {
     ) { }
 
 
-    //check session validity
-    sessionValidity(data){
-      return new Promise((resolve, reject) => {
-        this._httpClient.call(data, URLConstants.landingAPI, 'GET').subscribe(
-          res => {
-            resolve(res)
-          },
-          err => reject(err)
-        );
-      });
-    }
-
   //post login data to service 
    logout(data) {
     return new Promise((resolve, reject) => {
       this._httpClient.callLogout(data, URLConstants.logoutAPI, 'POST').subscribe(
         res => {
-          this._authService.loggedIn.next(false);
-
-          this._authService.loggedIn.subscribe(loggedIn => {
-           console.log(loggedIn);
-          });
-
+       //   this._authService.loggedIn.next(false);
+          sessionStorage.setItem('loggedIn', 'false');
 
           resolve(res)
         },
@@ -46,13 +30,6 @@ export class LandingPageService {
     });
   }
 
-//testing
-  // logout() {
-  //   this.http.post(environment.api_url + 'logout', {}, {
-  //     withCredentials: true
-  //   }).subscribe(() => {
-  //     this.loggedIn.next(false);
-  //   });
-  // }
+
 
 }
