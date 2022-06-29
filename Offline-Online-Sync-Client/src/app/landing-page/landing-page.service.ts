@@ -31,7 +31,6 @@ export class LandingPageService {
       this._httpClient.callCredentials(data, URLConstants.logoutAPI, 'POST').subscribe(
         res => {
           sessionStorage.setItem('loggedIn', 'false');
-
           resolve(res)
         },
         err => reject(err)

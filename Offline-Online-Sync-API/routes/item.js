@@ -117,41 +117,6 @@ router.get("/entries", (req, res, next) => {
 });
 
 
-// router.post("/register", async (req, res) => {
-//   const { custUsername, custEmail, custPassword } = req.body;
-
-//   let user = await UserModel.findOne({ custEmail });
-//   //check this
-//   if (user) {
-//     return  res.status(200).json({
-//       message: "User exist",
-//       userExist : true,
-//     })
-//   }
-
-//   const hashedPwd = await bcrypt.hash(custPassword, 12);
-//   let userData = new UserModel({
-//     username: custUsername,
-//     email: custEmail,
-//     password:hashedPwd
-//   });
-
-//   userData.save((err) => {
-//     if (err) {
-//       return  res.status(400).json({
-//         message: "The user data was not saved",
-//         userExist : true,
-//         errorMessage: err.message
-//       })
-//     } else {
-//       return  res.status(200).json({
-//         message: "User data was saved successfully",
-//         userExist : false,
-//       })
-//     }
-//   })
-// })
-
 
 // router.post("/login",  (req, res, ) => {
 
@@ -189,7 +154,7 @@ router.get("/entries", (req, res, next) => {
 //           // console.log('password matched :: req body is :: ', req.body);
 //           // console.log('password matched :: req is ::isAuth ', req.session.isAuth);
 //           console.log('req.session id inside login  :: ', req.session.id);
-       
+
 //           // res.redirect("/landing");
 //           return  res.status(200).json({
 //             message: "Matched.",
@@ -197,7 +162,7 @@ router.get("/entries", (req, res, next) => {
 //             passwordMismatch : false
 //           })
 //         }
-      
+
 //       //  req.session.isAuth = true;  //handle this :: impt
 //       //  console.log('req.session id inside login  :: ', req.session.id);
 
@@ -210,43 +175,6 @@ router.get("/entries", (req, res, next) => {
 // })
 
 
-// //Middlelayer ::  won't allow user to access application without login
-// const isAuth = (req, res, next)=>{
-//   console.log('req.session id inside auth:: ', req.session.id);
-//   console.log('req.session inside auth:: ', req.session);
-//   console.log('req.body  inside auth:: ', req.body);
-
-//   if(req.session.isAuth){
-//     next()
-//   }
-//   else{
-//    return res.status(200).json({
-//       message: "User not Authenticated",
-//       userAuth : false
-//     })
-//   }
-// }
-
-
-// router.get("/landing",isAuth,  (req, res) => {
-//   console.log('inside landing :: ', req.body)
-//   //return  res
-
-// })
-
-
-
-
-
-// router.post("/logout", (req, res, next) => {
-//   console.log('inside logout :: ', req.body)
-//   req.session.destroy((err)=>{
-//     if(err) throw err;
-//     res.redirect("/")
-//   })
-
-// })
-
 
 
 /**
@@ -255,9 +183,9 @@ router.get("/entries", (req, res, next) => {
  * test on 2 diff browsers to check if session is created
  * cookie is managed by express-session in the background
  */
- router.get('/', function(req, res){
-   console.log('req :: ', req)
-  if(req.session.page_views){
+router.get('/', function (req, res) {
+  console.log('req :: ', req)
+  if (req.session.page_views) {
     req.session.page_views++;
     res.send("You visited this page " + req.session.page_views + " times");
   } else {
@@ -286,7 +214,7 @@ const appUsers = {
 /**
  * Middleware to check that a payload is present
  */
- const validatePayloadMiddleware = (req, res, next) => {
+const validatePayloadMiddleware = (req, res, next) => {
   if (req.body) {
     next();
   } else {
@@ -302,31 +230,60 @@ const appUsers = {
  * If pw and email match, the user is fetched and stored into the session.
  * Finally the user is returned from the request.
  */
- router.post('/login', validatePayloadMiddleware, (req, res) => {
-  const user = appUsers[req.body.email];
-  if (user && user.pw === req.body.password) {
-    const userWithoutPassword = {...user};
-    delete userWithoutPassword.pw;
-    req.session.user = userWithoutPassword;
-    req.session.save();
-    console.log('session id inside login ', req.session.id)
-    res.status(200).send({
-      user: userWithoutPassword
-    });
-    
-  } else {
-    res.status(403).send({
-      errorMessage: 'Permission denied!'
-    });
-  }
+router.post('/login', validatePayloadMiddleware, (req, res) => {
+  const custEmail= req.body.email;
+  const custPassword = req.body.password;
+  UserModel.findOne({ email: custEmail }, async (err, user) => {
+    if (err) {
+      return res.status(200).json({
+        message: "Error in backend API",
+        error: true
+      })
+    } else {
+      console.log('user :: ', user)
+      if (!user || user == null) {
+        return res.status(200).json({
+          message: "Couldn't find user details",
+          error: false
+        })
+      }
+      else {
+        // const isMatch = await bcrypt.compare(custPassword, user.password)
+        console.log('custPassword :: ', custPassword);
+        console.log('user.password :: ', user.password);
+        const isMatch = await bcrypt.compare(custPassword, user.password)
+        console.log('isMatch :: ',isMatch);
+        if (!isMatch) {
+          return res.status(200).json({
+            message: "Password mismatch. Please try again",
+            error: false,
+            passwordMismatch: true
+          })
+        }
+        else {
+          const userWithoutPassword = { ...user };
+          delete userWithoutPassword.pw;
+          req.session.user = userWithoutPassword;
+          req.session.save();
+          return res.status(200).json({
+            message: "Matched.",
+            error: false,
+            passwordMismatch: false
+          })
+        }
+      }
+    }
+
+  })
+
 });
 
 /**
  * Check if user is logged in.
  */
- router.get('/login', (req, res) => {
-  console.log('inside get -- login ' , req.session.id)
-  req.session.user ? res.status(200).send({loggedIn: 'true'}) : res.status(200).send({loggedIn: 'false'});
+router.get('/login', (req, res) => {
+  console.log('inside get -- login ', req.session.id)
+  req.session.user ? res.status(200).send({ loggedIn: 'true' }) : res.status(200).send({ loggedIn: 'false' });
 });
 
 /**
@@ -346,10 +303,10 @@ router.post('/logout', (req, res) => {
 /**
  * Checks if user is logged in, by checking if user is stored in session.
  */
- const authMiddleware = (req, res, next) => {
+const authMiddleware = (req, res, next) => {
   console.log('aut middlelayer :: ', req.session);
-  console.log('session id inside login ', req.session.id)
-  if(req.session && req.session.user) {
+  console.log('session id:: authMiddleware :: ', req.session.id)
+  if (req.session && req.session.user) {
     next();
   } else {
     res.status(403).send({
@@ -357,6 +314,51 @@ router.post('/logout', (req, res) => {
     });
   }
 };
+
+
+router.get("/landing", authMiddleware, (req, res) => {
+  console.log('inside landing :: ', req.body)
+  //return  res
+
+})
+
+
+//need to check session first 
+router.post("/register", async (req, res) => {
+  const { custUsername, custEmail, custPassword } = req.body;
+  let user = await UserModel.findOne({ custEmail });
+  //check this
+  if (user) {
+    return res.status(200).json({
+      message: "User exist",
+      userExist: true,
+    })
+  }
+
+  const hashedPwd = await bcrypt.hash(custPassword, 12);
+  let userData = new UserModel({
+    username: custUsername,
+    email: custEmail,
+    password: hashedPwd
+  });
+
+  userData.save((err) => {
+    if (err) {
+      return res.status(400).json({
+        message: "The user data was not saved",
+        userExist: true,
+        errorMessage: err.message
+      })
+    } else {
+      return res.status(200).json({
+        message: "User data was saved successfully",
+        userExist: false,
+      })
+    }
+  })
+})
+
+
 
 
 /**
@@ -370,10 +372,11 @@ const getBalance = (email) => {
   return accountBalances[email];
 };
 
+
 /**
  * Endpoint to get users' account balance. Uses AuthMiddleware, such that only authenticated users can fetch balance.
  */
- router.get('/balance', authMiddleware, (req, res) => {
+router.get('/balance', authMiddleware, (req, res) => {
   const user = req.session.user;
   console.log('user :: ', user)
   const balance = getBalance(user.email);

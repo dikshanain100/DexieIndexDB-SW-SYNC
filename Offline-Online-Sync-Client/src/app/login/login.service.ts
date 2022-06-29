@@ -18,7 +18,6 @@ export class LoginService {
     return new Promise((resolve, reject) => {
       this._httpClient.callCredentials(data, URLConstants.loginAPI, 'POST').subscribe(
         res => {
-          console.log('res inside login service :: ', res)
           sessionStorage.setItem('loggedIn', 'true');
           resolve(res)
         },

@@ -41,7 +41,6 @@ export class LandingPageComponent implements OnInit {
     let data = {};
     this._landingPageService.logout(data).then(
       (res: any) => {
-        console.log('logout comp resp ::: ', res);
         sessionStorage.removeItem('loggedIn');
         this._router.navigate(["/login"]);
 

@@ -25,7 +25,6 @@ export class LoginComponent implements OnInit {
     private _router: Router,
   ) {
     this.loggedIn = sessionStorage.getItem('loggedIn');
-    console.log('this.loggedIn inside login comp :: ', this.loggedIn);
   }
 
   ngOnInit(): void {
@@ -85,33 +84,29 @@ export class LoginComponent implements OnInit {
   doLogin(formData) {
     this._loginService.doLogin(formData).then(
       (res: any) => {
-        console.log('res ::', res);
-        // this.toastr.success(res && res.user && res.user.name ? `Welcome ${res.user.name}` : 'Logged in!');
-        this._router.navigateByUrl('/landing'); //here auth guard will come
+        if (res.error) {
+          alert(res.message);
+        }
+        else {
+          if (res.passwordMismatch ==  true) {
+            console.log('pwd mismatch')
+            alert(res.message)    //not working
+          }
+          else if (res.passwordMismatch == false) {
+            console.log('pwd matched')
+            this._router.navigateByUrl('/landing');
+          }
+          else if (res.passwordMismatch == undefined) {
+            console.log('remainign')
+            alert(res.message);
+            this._router.navigateByUrl('/register');
+          }
 
-        // if (res.error) {
-        //   alert(res.message);
-        // }
-        // else {
-        //   if (res.passwordMismatch ==  true) {
-        //     console.log('psd mismatch')
-        //     alert(res.message)    //not working
-        //   }
-        //   else if (res.passwordMismatch == false) {
-        //     console.log('pwd matched')
-        //     this._router.navigateByUrl('/landing');
-        //   }
-        //   else if (res.passwordMismatch == undefined) {
-        //     console.log('remainign')
-        //     alert(res.message);
-        //     this._router.navigateByUrl('/register');
-        //   }
-
-        // }
+        }
         this.customerForm.reset();
       },
       (err: Object) => {
-        console.log('err from backend service: ', err);
+        alert('Error while login ' + err);
       })
       .catch((err: Object) => {
       });
