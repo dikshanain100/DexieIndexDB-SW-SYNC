@@ -196,22 +196,6 @@ router.get('/', function (req, res) {
 
 
 /**
- * Some hardcoded users to make the demo work
- */
-const appUsers = {
-  'max@gmail.com': {
-    email: 'max@gmail.com',
-    name: 'Max Miller',
-    pw: '1234' // YOU DO NOT WANT TO STORE PW's LIKE THIS IN REAL LIFE - HASH THEM FOR STORAGE
-  },
-  'lily@gmail.com': {
-    email: 'lily@gmail.com',
-    name: 'Lily Walter',
-    pw: '1235' // YOU DO NOT WANT TO STORE PW's LIKE THIS IN REAL LIFE - HASH THEM FOR STORAGE
-  }
-};
-
-/**
  * Middleware to check that a payload is present
  */
 const validatePayloadMiddleware = (req, res, next) => {
@@ -225,6 +209,24 @@ const validatePayloadMiddleware = (req, res, next) => {
 };
 
 /**
+ * Some hardcoded users to make the demo work
+ */
+ const appUsers = {
+  'max@gmail.com': {
+    email: 'max@gmail.com',
+    name: 'Max Miller',
+    pw: '1234' // YOU DO NOT WANT TO STORE PW's LIKE THIS IN REAL LIFE - HASH THEM FOR STORAGE
+  },
+  'lily@gmail.com': {
+    email: 'lily@gmail.com',
+    name: 'Lily Walter',
+    pw: '1235' // YOU DO NOT WANT TO STORE PW's LIKE THIS IN REAL LIFE - HASH THEM FOR STORAGE
+  }
+};
+
+
+
+/**
  * Log the user in.
  * User needs to provide pw and email, this is then compared to the pw in the "database"
  * If pw and email match, the user is fetched and stored into the session.
@@ -235,41 +237,41 @@ router.post('/login', validatePayloadMiddleware, (req, res) => {
   const custPassword = req.body.password;
   UserModel.findOne({ email: custEmail }, async (err, user) => {
     if (err) {
-      return res.status(200).json({
+       res.status(200).send({
         message: "Error in backend API",
         error: true
       })
     } else {
-      console.log('user :: ', user)
       if (!user || user == null) {
-        return res.status(200).json({
+         res.status(200).send({
           message: "Couldn't find user details",
           error: false
         })
       }
       else {
-        // const isMatch = await bcrypt.compare(custPassword, user.password)
-        console.log('custPassword :: ', custPassword);
-        console.log('user.password :: ', user.password);
+        console.log('user from mongo db  ::', user)
         const isMatch = await bcrypt.compare(custPassword, user.password)
-        console.log('isMatch :: ',isMatch);
         if (!isMatch) {
-          return res.status(200).json({
+           res.status(200).send({
             message: "Password mismatch. Please try again",
             error: false,
             passwordMismatch: true
           })
         }
         else {
-          const userWithoutPassword = { ...user };
-          delete userWithoutPassword.pw;
+      
+          let userWithoutPassword = {};
+          userWithoutPassword.email = user.email;
+          userWithoutPassword.username = user.username;
           req.session.user = userWithoutPassword;
-          req.session.save();
-          return res.status(200).json({
+         // req.session.save();
+          console.log('session id inside login :: ', req.session.id)
+           res.status(200).send({
             message: "Matched.",
             error: false,
             passwordMismatch: false
           })
+        
         }
       }
     }
@@ -277,6 +279,8 @@ router.post('/login', validatePayloadMiddleware, (req, res) => {
   })
 
 });
+
+
 
 /**
  * Check if user is logged in.
@@ -304,7 +308,7 @@ router.post('/logout', (req, res) => {
  * Checks if user is logged in, by checking if user is stored in session.
  */
 const authMiddleware = (req, res, next) => {
-  console.log('aut middlelayer :: ', req.session);
+  //console.log('aut middlelayer :: ', req.session);
   console.log('session id:: authMiddleware :: ', req.session.id)
   if (req.session && req.session.user) {
     next();

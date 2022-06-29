@@ -84,6 +84,7 @@ export class LoginComponent implements OnInit {
   doLogin(formData) {
     this._loginService.doLogin(formData).then(
       (res: any) => {
+
         if (res.error) {
           alert(res.message);
         }
@@ -94,15 +95,18 @@ export class LoginComponent implements OnInit {
           }
           else if (res.passwordMismatch == false) {
             console.log('pwd matched')
+            sessionStorage.setItem('loggedIn', 'true');
             this._router.navigateByUrl('/landing');
           }
           else if (res.passwordMismatch == undefined) {
-            console.log('remainign')
+            console.log('remaining')
             alert(res.message);
             this._router.navigateByUrl('/register');
           }
 
         }
+
+
         this.customerForm.reset();
       },
       (err: Object) => {

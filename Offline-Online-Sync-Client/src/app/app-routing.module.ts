@@ -8,19 +8,6 @@ const routes: Routes = [
     redirectTo: 'login', 
     pathMatch: 'full'
   },
-  { 
-    path: 'main', 
-    loadChildren: './main/main.module#MainModule' 
-  },
-  {
-    path: 'formTable',
-    // loadChildren: () => import('./form-table/form-table.module').then(m => m.FormTableModule)
-    loadChildren: './form-table/form-table.module#FormTableModule'
-  },
-  {
-    path: 'matTable',
-    loadChildren: './mat-des-table/mat-des-table.module#MatDesTableModule'
-  },
   {
     path: 'login',
     loadChildren: './login/login.module#LoginModule'
@@ -28,6 +15,22 @@ const routes: Routes = [
   {
     path: 'register',   
     loadChildren: './register/register.module#RegisterModule'
+  },
+  { 
+    path: 'main', 
+    loadChildren: './main/main.module#MainModule' ,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'formTable',
+    // loadChildren: () => import('./form-table/form-table.module').then(m => m.FormTableModule)
+    loadChildren: './form-table/form-table.module#FormTableModule',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'matTable',
+    loadChildren: './mat-des-table/mat-des-table.module#MatDesTableModule',
+    canActivate: [AuthGuard]
   },
   {
     path: 'landing',   

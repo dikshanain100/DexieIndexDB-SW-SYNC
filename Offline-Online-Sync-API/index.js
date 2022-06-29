@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require("express");
 const app = express();
-const bodyParser= require("body-parser");
+const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const port = process.env.PORT || 8080;
@@ -14,56 +14,58 @@ const MongoDBSession = require('connect-mongodb-session')(session); // to store 
 
 //database connection
 mongoose.connect(
-  database.connection, { 
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-  })
-.then(connection => {
-  console.log("connection stablished")
+  database.connection, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
 })
-.catch(error => {
-  console.log(database);
-  console.log({
-      error : {
-          name : error.name,
-          message : error.message,
-          errorCode: error.code,
-          codeName: error.codeName
-      }
+  .then(connection => {
+    console.log("connection stablished")
   })
-});
+  .catch(error => {
+    console.log(database);
+    console.log({
+      error: {
+        name: error.name,
+        message: error.message,
+        errorCode: error.code,
+        codeName: error.codeName
+      }
+    })
+  });
 
 
 
-app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 /**
  * Setting up CORS, such that it can work together with an Application at another domain / port
  */
- app.use(
+app.use(
   cors({
-    origin: ["http://localhost:4200"], 
+    origin: ["http://localhost:4200"],
     credentials: true
   }));
 
 
 //store session created in mong db 
-const userStore= new MongoDBSession({
-  uri :  database.connection,
-  collection : 'user_session'
+const userStore = new MongoDBSession({
+  uri: database.connection,
+  collection: 'user_session'
 })
 
 //create session
 app.use(session({
-  secret : 'secret',
-  resave : false,  //'true' menas for every req to server, we want to create a new session and we don't want to care about if it's a same user/browser
-  saveUninitialized : false, //if we have not touched or modified the session, we don't want it to be saved.
+  secret: 'secret',
+  resave: false,  //'true' menas for every req to server, we want to create a new session and we don't want to care about if it's a same user/browser
+  saveUninitialized: false, //if we have not touched or modified the session, we don't want it to be saved.
   store: userStore,
-  // cookie :{
-  //   maxAge : 1000*60*60*24 // equals 1 day 
-  // }
+  cookie: {
+    maxAge: 1000 * 60, //1 min expiry 
+    secure: false,
+    httpOnly:false,
+  }
 
   //check this in atul's code
   // cookie:{
@@ -91,7 +93,7 @@ app.use(session({
 //             "statusMessage": "ok"
 //         });
 //     }
-   
+
 //     next();
 // });
 
@@ -119,29 +121,29 @@ app.use("/", item);
 
 
 // Error message is send if router doesn't exist
-app.use((req,res,next)=>{
+app.use((req, res, next) => {
   const error = new Error("Unable to manage the request");
   //send a status code error
-  error.status= 404;
+  error.status = 404;
   //forward the request with the error
   next(error);
 })
 
 //error message 
-app.use((error, req, res, next)=>{
+app.use((error, req, res, next) => {
   res.status(error.status || 500);
   res.json({
-      "error": {
-          "message": error.message
-      }
+    "error": {
+      "message": error.message
+    }
   })
 });
 
 
 
 //create the server
-app.listen(port, ()=>{
-    console.log("Server is running @ localhost:8080");
+app.listen(port, () => {
+  console.log("Server is running @ localhost:8080");
 });
 
 
