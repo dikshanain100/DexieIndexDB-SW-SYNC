@@ -211,7 +211,7 @@ const validatePayloadMiddleware = (req, res, next) => {
 /**
  * Some hardcoded users to make the demo work
  */
- const appUsers = {
+const appUsers = {
   'max@gmail.com': {
     email: 'max@gmail.com',
     name: 'Max Miller',
@@ -233,17 +233,17 @@ const validatePayloadMiddleware = (req, res, next) => {
  * Finally the user is returned from the request.
  */
 router.post('/login', validatePayloadMiddleware, (req, res) => {
-  const custEmail= req.body.email;
+  const custEmail = req.body.email;
   const custPassword = req.body.password;
   UserModel.findOne({ email: custEmail }, async (err, user) => {
     if (err) {
-       res.status(200).send({
+      res.status(200).send({
         message: "Error in backend API",
         error: true
       })
     } else {
       if (!user || user == null) {
-         res.status(200).send({
+        res.status(200).send({
           message: "Couldn't find user details",
           error: false
         })
@@ -252,26 +252,26 @@ router.post('/login', validatePayloadMiddleware, (req, res) => {
         console.log('user from mongo db  ::', user)
         const isMatch = await bcrypt.compare(custPassword, user.password)
         if (!isMatch) {
-           res.status(200).send({
+          res.status(200).send({
             message: "Password mismatch. Please try again",
             error: false,
             passwordMismatch: true
           })
         }
         else {
-      
+
           let userWithoutPassword = {};
           userWithoutPassword.email = user.email;
           userWithoutPassword.username = user.username;
           req.session.user = userWithoutPassword;
-         // req.session.save();
+          // req.session.save();
           console.log('session id inside login :: ', req.session.id)
-           res.status(200).send({
+          res.status(200).send({
             message: "Matched.",
             error: false,
             passwordMismatch: false
           })
-        
+
         }
       }
     }
@@ -319,6 +319,8 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
+
+/* Check if session is valid */
 
 router.get("/landing", authMiddleware, (req, res) => {
   console.log('inside landing :: ', req.body)
