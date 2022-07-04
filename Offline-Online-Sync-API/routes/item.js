@@ -5,6 +5,8 @@ const Mongoose = require("mongoose");
 const https = require('https');
 const UserModel = require("../models/user");
 const bcrypt = require("bcryptjs");  //so that passwords are not recognized or changed by anyone
+const other = require("./other")
+
 
 
 
@@ -115,65 +117,6 @@ router.get("/entries", (req, res, next) => {
 
 
 });
-
-
-
-// router.post("/login",  (req, res, ) => {
-
-//   const { custEmail, custPassword } = req.body;
-
-//   UserModel.findOne({email : custEmail}, (err, user) => {
-//     if (err) {
-//       return  res.status(200).json({
-//         message: "Error in backend API",
-//         error : true
-//       })
-//     } else {
-//       console.log('user :: ', user)
-//       if (!user) {
-//         // return res.redirect('/login');  //redirect to register page
-//         return  res.status(200).json({
-//           message: "Couldn't find user details",
-//           error : false
-//         })
-//       }
-//       else{
-//        // const isMatch = await bcrypt.compare(custPassword, user.password)
-//         const isMatch =  bcrypt.compare(custPassword, user.password)
-//         if(!isMatch){
-//           return  res.status(200).json({
-//             message: "Password mismatch. Please try again",
-//             error : false,
-//             passwordMismatch : true
-//           })
-//         }
-//         else{
-//           req.session.isAuth = true;  //handle this :: impt //token is generated here 
-//           // req.session.username = user.username;
-//           // console.log('password matched :: req is :: ', req.session);
-//           // console.log('password matched :: req body is :: ', req.body);
-//           // console.log('password matched :: req is ::isAuth ', req.session.isAuth);
-//           console.log('req.session id inside login  :: ', req.session.id);
-
-//           // res.redirect("/landing");
-//           return  res.status(200).json({
-//             message: "Matched.",
-//             error : false,
-//             passwordMismatch : false
-//           })
-//         }
-
-//       //  req.session.isAuth = true;  //handle this :: impt
-//       //  console.log('req.session id inside login  :: ', req.session.id);
-
-//      //  res.redirect("/landing");
-//       }
-//     }
-
-//   })
-
-// })
-
 
 
 
@@ -321,6 +264,8 @@ const authMiddleware = (req, res, next) => {
 
 
 /* Check if session is valid */
+
+
 
 router.get("/landing", authMiddleware, (req, res) => {
   console.log('inside landing :: ', req.body)

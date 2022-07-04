@@ -6,6 +6,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const port = process.env.PORT || 8080;
 const item = require("./routes/item");
+const other = require("./routes/other");
 const database = require("./database/connection");
 const session = require('express-session');
 const MongoDBSession = require('connect-mongodb-session')(session); // to store session info in MongoDB
@@ -15,8 +16,8 @@ const MongoDBSession = require('connect-mongodb-session')(session); // to store 
 //database connection
 mongoose.connect(
   database.connection, {
-    //these properties remove some mongoose deprecated warnings
-    //refer :https://mongoosejs.com/docs/5.x/docs/deprecations.html
+  //these properties remove some mongoose deprecated warnings
+  //refer :https://mongoosejs.com/docs/5.x/docs/deprecations.html
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
@@ -66,7 +67,7 @@ app.use(session({
   cookie: {
     maxAge: 1000 * 60, //1 min expiry 
     secure: false,
-    httpOnly:false,
+    httpOnly: false,
   }
 }))
 
@@ -83,7 +84,7 @@ app.all('*', function (req, res, next) {
 
 
 app.use("/", item);
-
+app.use("/other/", other);
 
 
 // Error message is send if router doesn't exist
