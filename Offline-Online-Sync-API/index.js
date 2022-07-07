@@ -4,7 +4,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8089;
 const item = require("./routes/item");
 const other = require("./routes/other");
 const database = require("./database/connection");
@@ -110,7 +110,7 @@ app.use((error, req, res, next) => {
 
 //create the server
 app.listen(port, () => {
-  console.log("Server is running @ localhost:8080");
+  console.log("Server is running @ localhost:", port);
 });
 
 
