@@ -23,3 +23,19 @@ https://stackoverflow.com/questions/54728942/cant-update-index-dynamically-with-
 
 Server side session : express-session
 https://github.com/bersling/express-session-angular-ngx 
+
+
+Docker command for running backend image :
+            Not detach mode, when you want to check errors :::
+			docker run --add-host host.docker.internal:host-gateway -it -d -p 8080:8080 your_image_id    
+			Detach mode :::
+			docker run --add-host host.docker.internal:host-gateway -it -d -p 8080:8080 your_image_id    
+  
+Also, do check connection string in connection.js
+
+
+Docker command for running frontend image :
+           Not detach mode :
+		   docker run -p 4200:4200 image_id
+		   Detach mode :
+		   docker run -it -d -p 4200:4200 image_id
